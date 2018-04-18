@@ -18,16 +18,17 @@ public:
     ~StatGrabber();
     void Start();
     void Stop();
+    int GetStatisticNum();
     const bool& GetState();
-    void SetPeriod(const int& new_period);
-    virtual vector<StatisticData> GetStatData(string req) = 0;
-
-
-private:
     virtual void Parse() = 0;
+    void SetPeriod(const int& new_period);
+    bool GetStatistic(vector<StatisticData*>&);
 
-    vector<ifstream> stat_files;
-    vector<StatisticData> stat_data;
+
+protected:
+
+    vector<std::ifstream> stat_files;
+    vector<StatisticData*> stat_data;
     int period;
     bool state;
 };

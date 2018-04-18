@@ -10,13 +10,16 @@ using namespace std;
 class StatisticData
 {
 public:
-    StatisticData(const map<string, string>& new_data);
-    ~StatisticData();
-    virtual string ToString() = 0;
+    StatisticData(map<std::string, std::string>& new_data);
+    virtual std::string ToString() = 0;
+    const std::string& GetName();
+    const time_t& GetDate();
 
-    string name;
+
+protected:
+    std::string name;
     time_t date;
-    map<string, string> data;
+    map<std::string, std::string> data;
 };
 
 #endif // STATISTICDATA_H

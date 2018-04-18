@@ -1,14 +1,20 @@
 #include "statisticdata.h"
 
 
-StatisticData::StatisticData(const map<string, string>& new_data)
+StatisticData::StatisticData(map<std::string, std::string>& new_data)
 {
-    data = map<string, string>(new_data);
+    data = move(new_data);
     time(&date);
 }
 
 
-StatisticData::~StatisticData()
+const time_t& StatisticData::GetDate()
 {
+    return date;
+}
 
+
+const std::string& StatisticData::GetName()
+{
+    return name;
 }
