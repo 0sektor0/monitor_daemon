@@ -60,6 +60,9 @@ int StatGrabber::GetStatisticNum()
 StatGrabber::~StatGrabber()
 {
     vector<StatisticData*>::iterator i;
-    for (i = stat_data.begin(); i < stat_data.end(); ++i)
+    for (i = stat_data.begin(); i < stat_data.end(); i++)
         delete *i;
+
+    for (int i = 0; i < stat_files.size(); i++)
+        stat_files[i].close();
 }

@@ -1,8 +1,10 @@
 #ifndef STATISTICDATA_H
 #define STATISTICDATA_H
 
+
 #include <map>
 #include <time.h>
+#include <sstream>
 
 using namespace std;
 

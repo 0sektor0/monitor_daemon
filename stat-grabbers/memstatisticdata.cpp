@@ -10,10 +10,14 @@ MemStatisticData::MemStatisticData(map<std::string, std::string>& new_data) : St
 
 std::string MemStatisticData::ToString()
 {
-    std::string res = "";
+    /*bug that function dosent actually work*/
+    //StringUtilities::(date);
+    string res = name+"\n";
 
-    for(auto& item : data)
-        res = "";//std::string(item.first + ": " + item.second + " KB\n");
+    for(map<string, string>::iterator it = data.begin(); it != data.end(); ++it)
+    {
+        res += it->first + ": " + data[it->first] + "\n";
+    }
 
-    return "";
+    return res;
 }
