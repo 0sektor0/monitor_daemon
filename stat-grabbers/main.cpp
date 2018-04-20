@@ -1,3 +1,5 @@
+#define _GLIBCXX_USE_CXX11_ABI 0
+
 #include <iostream>
 #include "memstatgrabber.h"
 #include "diskstatgrabber.h"
@@ -11,18 +13,21 @@ int main()
     DiskStatGrabber dg;
     MemStatGrabber mg;
 
-    cout << endl << "mem stats number: " << mg.GetStatisticNum() << endl;
-    dg.Parse();
-    dg.Parse();
+
+    cout << "mem stats number: " << mg.GetStatisticNum() << endl;
     mg.Parse();
+    dg.Parse();
+    sleep(1);
     mg.Parse();
-    cout << endl << "mem stats number: " << mg.GetStatisticNum() << endl;
+    dg.Parse();
+    cout << "mem stats number: " << mg.GetStatisticNum() << endl;
 
     vector<StatisticData*> stat;
     mg.GetStatistic(stat);
-    cout << endl << "mem stats number: " << mg.GetStatisticNum() << endl;
+    cout << "mem stats number: " << mg.GetStatisticNum() << endl;
 
     cout << endl << stat[0]->ToString();
+    cout << endl << stat[1]->ToString();
 
     return 0;
 }

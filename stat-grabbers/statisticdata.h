@@ -1,6 +1,6 @@
 #ifndef STATISTICDATA_H
 #define STATISTICDATA_H
-
+#define _GLIBCXX_USE_CXX11_ABI 0
 
 #include <map>
 #include <time.h>
@@ -9,19 +9,17 @@
 using namespace std;
 
 
-class StatisticData
+struct StatisticData
 {
-public:
-    StatisticData(map<std::string, std::string>& new_data);
-    virtual std::string ToString() = 0;
-    const std::string& GetName();
-    const time_t& GetDate();
-
-
-protected:
     std::string name;
     time_t date;
     map<std::string, std::string> data;
+
+    StatisticData(map<std::string, std::string>& new_data);
+    StatisticData();
+    virtual std::string ToString() = 0;
+    const std::string& GetName();
+    const time_t& GetDate();
 };
 
 #endif // STATISTICDATA_H

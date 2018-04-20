@@ -2,18 +2,7 @@
 #define DISKSTATGRABBER_H
 
 #include "statgrabber.h"
-#include "stringutilities.h"
-
-
-struct Disk
-{
-    Disk(const std::string&);
-
-    std::string name;
-    unsigned int reads;
-    unsigned int writes;
-    unsigned int iotime;
-};
+#include "diskstatisticdata.h"
 
 
 class DiskStatGrabber : public StatGrabber
@@ -26,7 +15,7 @@ public:
 private:
 
     const std::string diskinfo = "/proc/diskstats";
-    vector<Disk> disks;
+    map<string, Disk> disks;
 };
 
 #endif // DISKSTATGRABBER_H

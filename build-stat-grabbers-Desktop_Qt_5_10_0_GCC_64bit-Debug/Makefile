@@ -14,7 +14,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_QML_DEBUG
 CFLAGS        = -pipe -g -Wall -W -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -g -std=gnu++11 -Wall -W -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -std=c++1z -g -std=gnu++1z -Wall -W -fPIC $(DEFINES)
 INCPATH       = -I../stat-grabbers -I. -I/opt/Qt/5.10.0/gcc_64/mkspecs/linux-g++
 QMAKE         = /opt/Qt/5.10.0/gcc_64/bin/qmake
 DEL_FILE      = rm -f
@@ -54,12 +54,18 @@ SOURCES       = ../stat-grabbers/main.cpp \
 		../stat-grabbers/memstatgrabber.cpp \
 		../stat-grabbers/memstatisticdata.cpp \
 		../stat-grabbers/statgrabber.cpp \
-		../stat-grabbers/statisticdata.cpp 
+		../stat-grabbers/statisticdata.cpp \
+		../stat-grabbers/diskstatgrabber.cpp \
+		../stat-grabbers/stringutilities.cpp \
+		../stat-grabbers/diskstatisticdata.cpp 
 OBJECTS       = main.o \
 		memstatgrabber.o \
 		memstatisticdata.o \
 		statgrabber.o \
-		statisticdata.o
+		statisticdata.o \
+		diskstatgrabber.o \
+		stringutilities.o \
+		diskstatisticdata.o
 DIST          = /opt/Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/common/unix.conf \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/common/linux.conf \
@@ -223,6 +229,7 @@ DIST          = /opt/Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/features/qt_config.prf \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/features/spec_post.prf \
+		../stat-grabbers/.qmake.stash \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/features/toolchain.prf \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/features/default_pre.prf \
@@ -239,11 +246,17 @@ DIST          = /opt/Qt/5.10.0/gcc_64/mkspecs/features/spec_pre.prf \
 		../stat-grabbers/stat-grabbers.pro memstatgrabber.h \
 		memstatisticdata.h \
 		statgrabber.h \
-		statisticdata.h ../stat-grabbers/main.cpp \
+		statisticdata.h \
+		diskstatgrabber.h \
+		stringutilities.h \
+		diskstatisticdata.h ../stat-grabbers/main.cpp \
 		../stat-grabbers/memstatgrabber.cpp \
 		../stat-grabbers/memstatisticdata.cpp \
 		../stat-grabbers/statgrabber.cpp \
-		../stat-grabbers/statisticdata.cpp
+		../stat-grabbers/statisticdata.cpp \
+		../stat-grabbers/diskstatgrabber.cpp \
+		../stat-grabbers/stringutilities.cpp \
+		../stat-grabbers/diskstatisticdata.cpp
 QMAKE_TARGET  = stat-grabbers
 DESTDIR       = 
 TARGET        = stat-grabbers
@@ -418,6 +431,7 @@ Makefile: ../stat-grabbers/stat-grabbers.pro /opt/Qt/5.10.0/gcc_64/mkspecs/linux
 		/opt/Qt/5.10.0/gcc_64/mkspecs/features/qt_config.prf \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/features/toolchain.prf \
 		/opt/Qt/5.10.0/gcc_64/mkspecs/features/default_pre.prf \
@@ -596,6 +610,7 @@ Makefile: ../stat-grabbers/stat-grabbers.pro /opt/Qt/5.10.0/gcc_64/mkspecs/linux
 /opt/Qt/5.10.0/gcc_64/mkspecs/features/qt_config.prf:
 /opt/Qt/5.10.0/gcc_64/mkspecs/linux-g++/qmake.conf:
 /opt/Qt/5.10.0/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /opt/Qt/5.10.0/gcc_64/mkspecs/features/exclusive_builds.prf:
 /opt/Qt/5.10.0/gcc_64/mkspecs/features/toolchain.prf:
 /opt/Qt/5.10.0/gcc_64/mkspecs/features/default_pre.prf:
@@ -656,7 +671,10 @@ compiler_clean:
 main.o: ../stat-grabbers/main.cpp ../stat-grabbers/memstatgrabber.h \
 		../stat-grabbers/statgrabber.h \
 		../stat-grabbers/statisticdata.h \
-		../stat-grabbers/memstatisticdata.h
+		../stat-grabbers/memstatisticdata.h \
+		../stat-grabbers/diskstatgrabber.h \
+		../stat-grabbers/diskstatisticdata.h \
+		../stat-grabbers/stringutilities.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../stat-grabbers/main.cpp
 
 memstatgrabber.o: ../stat-grabbers/memstatgrabber.cpp ../stat-grabbers/memstatgrabber.h \
@@ -675,6 +693,21 @@ statgrabber.o: ../stat-grabbers/statgrabber.cpp ../stat-grabbers/statgrabber.h \
 
 statisticdata.o: ../stat-grabbers/statisticdata.cpp ../stat-grabbers/statisticdata.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o statisticdata.o ../stat-grabbers/statisticdata.cpp
+
+diskstatgrabber.o: ../stat-grabbers/diskstatgrabber.cpp ../stat-grabbers/diskstatgrabber.h \
+		../stat-grabbers/statgrabber.h \
+		../stat-grabbers/statisticdata.h \
+		../stat-grabbers/diskstatisticdata.h \
+		../stat-grabbers/stringutilities.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o diskstatgrabber.o ../stat-grabbers/diskstatgrabber.cpp
+
+stringutilities.o: ../stat-grabbers/stringutilities.cpp ../stat-grabbers/stringutilities.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o stringutilities.o ../stat-grabbers/stringutilities.cpp
+
+diskstatisticdata.o: ../stat-grabbers/diskstatisticdata.cpp ../stat-grabbers/diskstatisticdata.h \
+		../stat-grabbers/stringutilities.h \
+		../stat-grabbers/statisticdata.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o diskstatisticdata.o ../stat-grabbers/diskstatisticdata.cpp
 
 ####### Install
 

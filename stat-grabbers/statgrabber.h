@@ -1,5 +1,6 @@
 #ifndef STATGRABBER_H
 #define STATGRABBER_H
+#define _GLIBCXX_USE_CXX11_ABI 0
 
 #include "statisticdata.h"
 #include <unistd.h>

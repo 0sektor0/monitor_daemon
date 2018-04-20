@@ -38,17 +38,20 @@ std::string MemStatGrabber::GetStat(const std::string& param_name, std::ifstream
             std::string param_val;
             if(f>>param_val)
             {
+                f.clear();
                 f.seekg(0);
                 return param_val;
             }
             else
             {
+                f.clear();
                 f.seekg(0);
                 return "0";
             }
         }
     }
 
+    f.clear();
     f.seekg(0);
     return "0";
 }

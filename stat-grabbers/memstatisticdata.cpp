@@ -15,9 +15,7 @@ std::string MemStatisticData::ToString()
     string res = name+"\n";
 
     for(map<string, string>::iterator it = data.begin(); it != data.end(); ++it)
-    {
-        res += it->first + ": " + data[it->first] + "\n";
-    }
+        res += it->first + ": " + it->second + " KB\n";
 
     return res;
 }

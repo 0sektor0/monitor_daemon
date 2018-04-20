@@ -8,6 +8,12 @@ StatisticData::StatisticData(map<std::string, std::string>& new_data)
 }
 
 
+StatisticData::StatisticData()
+{
+    time(&date);
+}
+
+
 const time_t& StatisticData::GetDate()
 {
     return date;

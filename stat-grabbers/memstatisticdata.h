@@ -4,9 +4,8 @@
 #include "statisticdata.h"
 
 
-class MemStatisticData : public StatisticData
+struct MemStatisticData : public StatisticData
 {
-public:
     MemStatisticData(map<string, std::string>& new_data);
     std::string ToString();
 };
