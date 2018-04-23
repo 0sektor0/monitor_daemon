@@ -1,9 +1,11 @@
 #ifndef DISKSTATISTICDATA_H
 #define DISKSTATISTICDATA_H
 
-#include "stringutilities.h"
 #include "statisticdata.h"
+#include "stringutilities.h"
 #include <vector>
+
+using namespace StringUtilities;
 
 
 struct Disk

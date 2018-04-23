@@ -1,15 +1,15 @@
 #ifndef MEMSTATGRABBER_H
 #define MEMSTATGRABBER_H
 
-#include "statgrabber.h"
+#include "fstatgrabber.h"
 #include "memstatisticdata.h"
 
 
-class MemStatGrabber : public StatGrabber
+class MemStatGrabber : public FStatGrabber
 {
 public:
     MemStatGrabber();
-    void Parse();
+    void Grab();
 
 
 private:

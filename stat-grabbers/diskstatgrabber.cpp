@@ -1,7 +1,7 @@
 #include "diskstatgrabber.h"
 
 
-DiskStatGrabber::DiskStatGrabber() : StatGrabber()
+DiskStatGrabber::DiskStatGrabber() : FStatGrabber()
 {
     stat_files.push_back(std::ifstream(diskinfo));
 
@@ -28,7 +28,7 @@ DiskStatGrabber::DiskStatGrabber() : StatGrabber()
 }
 
 
-void DiskStatGrabber::Parse()
+void DiskStatGrabber::Grab()
 {
     //чтение данных о дисках
     if(stat_files[0].is_open())

@@ -4,18 +4,18 @@
 
 DiskStatisticData::DiskStatisticData(const Disk& disk) : StatisticData()
 {
+    name = disk.name;
+
     data["name"] = disk.name;
-    //wth?
-    ///home/sektor/mydocs/projects/C++/tp-s1-cpp-project/stat-grabbers/diskstatisticdata.cpp:8: ошибка: undefined reference to `std::string StringUtilities::ToString<unsigned int>(unsigned int const&)'
-    //data["reads"] = StringUtilities::ToString(disk.reads);
-    data["writes"] = "";
-    data["iotime"] = "";
+    data["reads"] = StringUtilities::ToString(disk.reads);
+    data["writes"] = StringUtilities::ToString(disk.writes);
+    data["iotime"] = StringUtilities::ToString(disk.iotime);
 }
 
 
 std::string DiskStatisticData::ToString()
 {
-    string res = name+"\n";
+    string res = name+"\n" + StringUtilities::ToString(date)+"\n";
 
     for(map<string, string>::iterator it = data.begin(); it != data.end(); ++it)
         res += it->first + ": " + it->second + "\n";

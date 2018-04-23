@@ -2,6 +2,9 @@
 #define MEMSTATISTICDATA_H
 
 #include "statisticdata.h"
+#include "stringutilities.h"
+
+using namespace StringUtilities;
 
 
 struct MemStatisticData : public StatisticData

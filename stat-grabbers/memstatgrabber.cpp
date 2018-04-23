@@ -1,12 +1,12 @@
 #include "memstatgrabber.h"
 
-MemStatGrabber::MemStatGrabber() : StatGrabber()
+MemStatGrabber::MemStatGrabber() : FStatGrabber()
 {
     stat_files.push_back(std::ifstream(meminfo));
 }
 
 
-void MemStatGrabber::Parse()
+void MemStatGrabber::Grab()
 {
     std::ifstream& f = stat_files[meminfo_ind];
     if (!f.is_open())

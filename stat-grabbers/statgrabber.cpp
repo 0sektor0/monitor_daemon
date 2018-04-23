@@ -3,18 +3,24 @@
 
 StatGrabber::StatGrabber() : period(1), state(false)
 {
-    stat_files = vector<std::ifstream>();
     stat_data = vector<StatisticData*>();
 }
 
 
-bool StatGrabber::GetStatistic(vector<StatisticData*>& dest)
+vector<StatisticData*> StatGrabber::GetStatistic()
 {
     if (stat_data.empty())
-        return 0;
+        throw std::runtime_error("stat-grabber is empty");
 
+    vector<StatisticData*> dest;
     dest = move(stat_data);
-    return 1;
+    return dest;
+}
+
+
+bool StatGrabber::IsEmpty()
+{
+    return stat_data.empty();
 }
 
 
@@ -26,7 +32,7 @@ void StatGrabber::Start()
 
         while(true)
         {
-            Parse();
+            Grab();
             sleep(period);
         }
     }
@@ -62,7 +68,4 @@ StatGrabber::~StatGrabber()
     vector<StatisticData*>::iterator i;
     for (i = stat_data.begin(); i < stat_data.end(); i++)
         delete *i;
-
-    for (int i = 0; i < stat_files.size(); i++)
-        stat_files[i].close();
 }

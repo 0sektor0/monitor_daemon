@@ -1,20 +1,6 @@
 #include "stringutilities.h"
 
-
-StringUtilities::StringUtilities()
-{
-
-}
-
-
-template<typename T>
-std::string StringUtilities::ToString(const T& t)
-{
-    std::stringstream ss;
-    ss << t;
-
-    return ss.str();
-}
+using namespace StringUtilities;
 
 
 std::vector<std::string> StringUtilities::Split(const std::string& str_to_split, char delimeter)
@@ -25,7 +11,7 @@ std::vector<std::string> StringUtilities::Split(const std::string& str_to_split,
 
     while (std::getline(ss, item, delimeter))
        if(item != "")
-        splitted_strings.push_back(item);
+           splitted_strings.push_back(item);
 
     return splitted_strings;
 }
@@ -41,3 +27,4 @@ unsigned int StringUtilities::Stoui(const std::string& s)
 
     return result;
 }
+

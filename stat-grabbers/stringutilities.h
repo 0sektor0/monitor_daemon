@@ -12,17 +12,19 @@
 using namespace std;
 
 
-class StringUtilities
+namespace StringUtilities
 {
-public:
-    static unsigned int Stoui(const std::string&);
-    static std::vector<std::string> Split(const std::string&, char);
+    unsigned int Stoui(const std::string&);
+    std::vector<std::string> Split(const std::string&, char);
+
     template<typename T>
-        static std::string ToString(const T&);
+        std::string ToString(const T& t)
+        {
+            std::stringstream ss;
+            ss << t;
 
-
-private:
-    StringUtilities();
-};
+            return ss.str();
+        }
+}
 
 #endif // STRINGUTILITIES_H

@@ -1,15 +1,15 @@
 #ifndef DISKSTATGRABBER_H
 #define DISKSTATGRABBER_H
 
-#include "statgrabber.h"
+#include "fstatgrabber.h"
 #include "diskstatisticdata.h"
 
 
-class DiskStatGrabber : public StatGrabber
+class DiskStatGrabber : public FStatGrabber
 {
 public:
     DiskStatGrabber();
-    void Parse();
+    void Grab();
 
 
 private:

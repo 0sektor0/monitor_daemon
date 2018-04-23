@@ -13,21 +13,34 @@ int main()
     DiskStatGrabber dg;
     MemStatGrabber mg;
 
+    for(;;)
+    {
+        system("clear");
 
-    cout << "mem stats number: " << mg.GetStatisticNum() << endl;
-    mg.Parse();
-    dg.Parse();
-    sleep(1);
-    mg.Parse();
-    dg.Parse();
-    cout << "mem stats number: " << mg.GetStatisticNum() << endl;
+        dg.Grab();
+        if (!dg.IsEmpty())
+        {
+            vector<StatisticData*> st = dg.GetStatistic();
+            for(int i = 0; i < st.size(); i++)
+            {
+                cout << st[i]->ToString() << endl;
+                delete st[i];
+            }
+        }
 
-    vector<StatisticData*> stat;
-    mg.GetStatistic(stat);
-    cout << "mem stats number: " << mg.GetStatisticNum() << endl;
+        mg.Grab();
+        if (!mg.IsEmpty())
+        {
+            vector<StatisticData*> st = mg.GetStatistic();
+            for(int i = 0; i < st.size(); i++)
+            {
+                cout << st[i]->ToString() << endl;
+                delete st[i];
+            }
+        }
 
-    cout << endl << stat[0]->ToString();
-    cout << endl << stat[1]->ToString();
+        sleep(1);
+    }
 
     return 0;
 }
