@@ -1,7 +1,7 @@
 #include "statgrabber.h"
 
 
-StatGrabber::StatGrabber() : period(1), state(false)
+StatGrabber::StatGrabber()
 {
     stat_data = vector<StatisticData*>();
 }
@@ -21,39 +21,6 @@ vector<StatisticData*> StatGrabber::GetStatistic()
 bool StatGrabber::IsEmpty()
 {
     return stat_data.empty();
-}
-
-
-void StatGrabber::Start()
-{
-    if(!state)
-    {
-        state = true;
-
-        while(true)
-        {
-            Grab();
-            sleep(period);
-        }
-    }
-}
-
-
-void StatGrabber::Stop()
-{
-    state = false;
-}
-
-
-void StatGrabber::SetPeriod(const int& new_period)
-{
-    period = new_period;
-}
-
-
-const bool& StatGrabber::GetState()
-{
-    return state;
 }
 
 

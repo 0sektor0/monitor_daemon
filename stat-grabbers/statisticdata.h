@@ -1,6 +1,5 @@
 #ifndef STATISTICDATA_H
 #define STATISTICDATA_H
-#define _GLIBCXX_USE_CXX11_ABI 0
 
 #include <map>
 #include <time.h>
