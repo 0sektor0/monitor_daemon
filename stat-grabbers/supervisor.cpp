@@ -21,10 +21,10 @@ void Supervisor::RunContainer(GrabbersContainer* container)
 
     while(container->running)
     {
-        //нужно сделать так, чтобы цикл стопился, пока мютекс залочен
-
+        container->mx.lock();
         for(int i = 0; i < container->grabbers.size(); i++)
             container->grabbers[i]->Grab();
+        container->mx.unlock();
 
         cout << "container " + container->name + " processed" << endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(container->period));
