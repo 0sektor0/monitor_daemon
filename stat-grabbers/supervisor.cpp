@@ -11,7 +11,7 @@ Supervisor::Supervisor()
 
     enabled_containers.push_back(grubc);
     savers.push_back(new PrintStatSaver());
-    savers.push_back(new FStatSaver("/home/sektor/Test"));
+    savers.push_back(new FStatSaver("./stats"));
 
     period = 5000;
 }
