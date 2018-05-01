@@ -12,15 +12,3 @@ StatisticData::StatisticData()
 {
     time(&date);
 }
-
-
-const time_t& StatisticData::GetDate()
-{
-    return date;
-}
-
-
-const std::string& StatisticData::GetName()
-{
-    return name;
-}

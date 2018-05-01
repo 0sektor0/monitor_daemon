@@ -10,8 +10,16 @@ Supervisor::Supervisor()
     grubc->grabbers.push_back(new DiskStatGrabber());
 
     enabled_containers.push_back(grubc);
+    savers.push_back(new PrintStatSaver());
+    savers.push_back(new FStatSaver("/home/sektor/Test"));
 
-    period = 2000;
+    period = 5000;
+}
+
+
+void Supervisor::SetPeriod(const int& period)
+{
+    this->period = period;
 }
 
 
@@ -26,7 +34,7 @@ void Supervisor::RunContainer(GrabbersContainer* container)
             container->grabbers[i]->Grab();
         container->mx.unlock();
 
-        cout << "container " + container->name + " processed" << endl;
+        clog << "container " + container->name + " processed" << endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(container->period));
     }
 }
@@ -34,77 +42,66 @@ void Supervisor::RunContainer(GrabbersContainer* container)
 
 void Supervisor::Start()
 {
-    for(int i = 0; i < enabled_containers.size(); i++)
+    for(GrabbersContainer* container : enabled_containers)
     {
         try
         {
-            std::thread th([=] { RunContainer(enabled_containers[i]); });
+            std::thread th([=] { RunContainer(container); });
             th.detach();
-            cout << enabled_containers[i]->name + " [OK]" << endl;
+            cout << container->name + " [OK]" << endl;
         }
         catch(int e)
         {
-            cout << enabled_containers[i]->name + " [FAIL]" << endl;
+            clog << container->name + " [FAIL]" << endl;
         }
     }
-
-    std::thread th([=] { GrabStatistic(); });
-    th.detach();
 }
 
 
 void Supervisor::Stop()
 {
-    for(int i = 0; i < enabled_containers.size(); i++)
+    for(GrabbersContainer* container : enabled_containers)
     {
-        enabled_containers[i]->running = false;
-        cout << enabled_containers[i]->name + " [STOP]" << endl;
+        container->running = false;
+        clog << container->name + " [STOP]" << endl;
     }
 }
 
 
 void Supervisor::Save()
 {
-    for(int i = 0; i < gathered_statistic.size(); i++)
-    {
-        cout << gathered_statistic[i]->ToString() << endl;
-        delete gathered_statistic[i];
-    }
+    for(StatSaver* ss : savers)
+        ss->Save(gathered_statistic);
 
+    DeleteVectorsElements(gathered_statistic);
     gathered_statistic = vector<StatisticData*>();
 }
 
 
 void Supervisor::GrabStatistic()
 {
-    for(;;)
-    {
-        for(GrabbersContainer* container : enabled_containers)
-            for(StatGrabber* grabber : container->grabbers)
-            {
-                container->mx.lock();
-                if(!grabber->IsEmpty())
-                {
-                    vector<StatisticData*> st = grabber->GetStatistic();
-                    gathered_statistic.insert(gathered_statistic.end(), st.begin(), st.end());
-                }
-                container->mx.unlock();
-            }
+    std::this_thread::sleep_for(std::chrono::milliseconds(period));
 
-        cout << "statistic grabbed: " + gathered_statistic.size() << endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(period));
-    }
+    for(GrabbersContainer* container : enabled_containers)
+        for(StatGrabber* grabber : container->grabbers)
+        {
+            container->mx.lock();
+            if(!grabber->IsEmpty())
+            {
+                vector<StatisticData*> st = grabber->GetStatistic();
+                gathered_statistic.insert(gathered_statistic.end(), st.begin(), st.end());
+            }
+            container->mx.unlock();
+        }
+
+    Save();
 }
 
 
 Supervisor::~Supervisor()
 {
-    for(int i = 0; i < enabled_containers.size(); i++)
-        delete enabled_containers[i];
-
-    for(int i = 0; i < disabled_containers.size(); i++)
-        delete disabled_containers[i];
-
-    for(int i = 0; i < gathered_statistic.size(); i++)
-        delete gathered_statistic[i];
+    DeleteVectorsElements(disabled_containers);
+    DeleteVectorsElements(enabled_containers);
+    DeleteVectorsElements(gathered_statistic);
+    DeleteVectorsElements(savers);
 }

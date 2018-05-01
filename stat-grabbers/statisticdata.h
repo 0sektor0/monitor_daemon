@@ -15,10 +15,8 @@ struct StatisticData
     map<std::string, std::string> data;
 
     StatisticData(map<std::string, std::string>& new_data);
-    StatisticData();
     virtual std::string ToString() = 0;
-    const std::string& GetName();
-    const time_t& GetDate();
+    StatisticData();
 };
 
 #endif // STATISTICDATA_H

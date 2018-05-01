@@ -1,10 +1,13 @@
 #ifndef SUPERVISOR_H
 #define SUPERVISOR_H
 
+#include <mutex>
 #include <thread>
 #include <chrono>
-#include <mutex>
+#include "statsaver.h"
 #include "statgrabber.h"
+#include "printstatsaver.h"
+#include "fstatsaver.h"
 #include "memstatgrabber.h"
 #include "diskstatgrabber.h"
 
@@ -25,21 +28,31 @@ struct GrabbersContainer
 class Supervisor
 {
 public:
+    Supervisor(const vector<GrabbersContainer*>&);
     Supervisor();
     ~Supervisor();
     void Start();
-    void Save();
     void Stop();
+    void GrabStatistic();
+    void SetPeriod(const int&);
 
 
 private:
     vector<GrabbersContainer*> enabled_containers;
     vector<GrabbersContainer*> disabled_containers;
     vector<StatisticData*> gathered_statistic;
-    void GrabStatistic();
+    vector<StatSaver*> savers;
     unsigned int period;
 
     void RunContainer(GrabbersContainer*);
+    void Save();
+
+    template<class T>
+    void DeleteVectorsElements(vector<T*>& v)
+    {
+        for(int i = 0; i < v.size(); i++)
+            delete v[i];
+    }
 };
 
 #endif // SUPERVISOR_H

@@ -10,9 +10,10 @@ int main()
     Supervisor sv;
 
     sv.Start();
-    sleep(5);
+    sv.SetPeriod(60000);
+    for(;;)
+        sv.GrabStatistic();
     sv.Stop();
-    sv.Save();
 
     return 0;
 }
