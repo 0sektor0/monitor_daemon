@@ -4,16 +4,19 @@
 
 Supervisor::Supervisor()
 {
-    GrabbersContainer* grubc = new GrabbersContainer();
-    grubc->name = "md";
-    grubc->grabbers.push_back(new MemStatGrabber());
-    grubc->grabbers.push_back(new DiskStatGrabber());
+    period = 60000;
+}
 
-    enabled_containers.push_back(grubc);
-    savers.push_back(new PrintStatSaver());
-    savers.push_back(new FStatSaver("./stats"));
 
-    period = 5000;
+void Supervisor::AddContainer(GrabbersContainer* container)
+{
+    enabled_containers.push_back(container);
+}
+
+
+void Supervisor::AddSaver(StatSaver* saver)
+{
+    savers.push_back(saver);
 }
 
 

@@ -28,13 +28,14 @@ struct GrabbersContainer
 class Supervisor
 {
 public:
-    Supervisor(const vector<GrabbersContainer*>&);
     Supervisor();
     ~Supervisor();
-    void Start();
     void Stop();
+    void Start();
     void GrabStatistic();
+    void AddSaver(StatSaver*);
     void SetPeriod(const int&);
+    void AddContainer(GrabbersContainer*);
 
 
 private:
