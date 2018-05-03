@@ -18,9 +18,11 @@ int main()
     sv.AddSaver(new PrintStatSaver());
     sv.AddSaver(new FStatSaver("/var/log/sg"));
 
-    sv.Start();
     sv.SetPeriod(10000);
+    sv.DisableAllContainers();
+    //sv.DisableContainer(grubc->name);
 
+    sv.Start();
     for(;;)
         sv.GrabStatistic();
     sv.Stop();

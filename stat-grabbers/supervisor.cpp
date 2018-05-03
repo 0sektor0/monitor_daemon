@@ -101,6 +101,56 @@ void Supervisor::GrabStatistic()
 }
 
 
+void Supervisor::DisableContainer(const std::string& name)
+{
+    MoveContainer(name, enabled_containers, disabled_containers);
+}
+
+
+void Supervisor::EnableContainer(const std::string& name)
+{
+    MoveContainer(name, disabled_containers, enabled_containers);
+}
+
+
+void Supervisor::MoveContainer(const std::string& name, vector<GrabbersContainer*>& src, vector<GrabbersContainer*>& dist)
+{
+    for(int i = 0; i < src.size(); i++)
+        if(src[i]->name == name)
+        {
+            GrabbersContainer* container = src[i];
+            container->running = !container->running;
+
+            src.erase(src.begin()+i);
+            dist.push_back(container);
+        }
+}
+
+
+void Supervisor::EnableAllContainers()
+{
+    MoveAllContainers(disabled_containers, enabled_containers);
+}
+
+
+void Supervisor::DisableAllContainers()
+{
+    MoveAllContainers(enabled_containers, disabled_containers);
+}
+
+
+void Supervisor::MoveAllContainers(vector<GrabbersContainer*>& src, vector<GrabbersContainer*>& dist)
+{
+    for(int i = 0; i < src.size(); i++)
+    {
+        src[i]->running = !src[i]->running;
+        dist.push_back(src[i]);
+    }
+
+    src.clear();
+}
+
+
 Supervisor::~Supervisor()
 {
     DeleteVectorsElements(disabled_containers);

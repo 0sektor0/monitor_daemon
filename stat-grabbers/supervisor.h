@@ -36,6 +36,10 @@ public:
     void AddSaver(StatSaver*);
     void SetPeriod(const int&);
     void AddContainer(GrabbersContainer*);
+    void EnableAllContainers();
+    void DisableAllContainers();
+    void EnableContainer(const std::string&);
+    void DisableContainer(const std::string&);
 
 
 private:
@@ -45,6 +49,8 @@ private:
     vector<StatSaver*> savers;
     unsigned int period;
 
+    void MoveContainer(const std::string&, vector<GrabbersContainer*>&, vector<GrabbersContainer*>&);
+    void MoveAllContainers(vector<GrabbersContainer*>&, vector<GrabbersContainer*>&);
     void RunContainer(GrabbersContainer*);
     void Save();
 
