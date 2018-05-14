@@ -9,6 +9,7 @@ class MemStatGrabber : public FStatGrabber
 {
 public:
     MemStatGrabber();
+    virtual ~MemStatGrabber() {}
     void Grab();
 
 

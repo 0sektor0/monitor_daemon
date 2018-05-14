@@ -8,6 +8,12 @@ StatisticData::StatisticData(map<std::string, std::string>& new_data)
 }
 
 
+bool StatisticData::operator<(const StatisticData& rhs)
+{
+    return date < rhs.date;
+}
+
+
 StatisticData::StatisticData()
 {
     time(&date);

@@ -18,10 +18,12 @@ class FStatSaver : public StatSaver
 {
 public:
     FStatSaver(const std::string&);
+    virtual ~FStatSaver() {}
     void Save(const vector<StatisticData*>&);
 
 private:
     std::string dir;
+    const std::string extension = ".log";
 
     std::string CreateFname(const StatisticData*);
     bool CheckIsDirectory(const std::string&);

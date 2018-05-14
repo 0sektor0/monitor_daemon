@@ -2,9 +2,9 @@
 
 
 
-DiskStatisticData::DiskStatisticData(const Disk& disk) : StatisticData()
+DiskStatisticData::DiskStatisticData(const DiskInfo& disk) : StatisticData()
 {
-    name = disk.name;
+    name = disk.name + "_statistic";
 
     data["name"] = disk.name;
     data["reads"] = StringUtilities::ToString(disk.reads);
@@ -24,7 +24,7 @@ std::string DiskStatisticData::ToString()
 }
 
 
-Disk::Disk(const std::string& str)
+DiskInfo::DiskInfo(const std::string& str)
 {
     vector<std::string> dinf= StringUtilities::Split(str, ' ');
     const int name_ind = 2;
@@ -44,15 +44,15 @@ Disk::Disk(const std::string& str)
 }
 
 
-Disk::Disk()
+DiskInfo::DiskInfo()
 {
 
 }
 
 
-Disk Disk::operator -(const Disk& d2)
+DiskInfo DiskInfo::operator -(const DiskInfo& d2)
 {
-    Disk d;
+    DiskInfo d;
     d.name = this->name;
     d.reads = this->reads - d2.reads;
     d.writes = this->writes - d2.writes;

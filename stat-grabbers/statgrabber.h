@@ -11,7 +11,7 @@ class StatGrabber
 {
 public:
     StatGrabber();
-    ~StatGrabber();
+    virtual ~StatGrabber();
     bool IsEmpty();
     int GetStatisticNum();
     virtual void Grab() = 0;

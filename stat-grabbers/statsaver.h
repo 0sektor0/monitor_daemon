@@ -11,6 +11,7 @@ class StatSaver
 {
 public:
     virtual void Save(const vector<StatisticData*>&) = 0;
+    //void
 };
 
 #endif // STATSAVER_H

@@ -8,11 +8,11 @@
 using namespace StringUtilities;
 
 
-struct Disk
+struct DiskInfo
 {
-    Disk(const std::string&);
-    Disk operator - (const Disk& d2);
-    Disk();
+    DiskInfo(const std::string&);
+    DiskInfo operator - (const DiskInfo& d2);
+    DiskInfo();
 
     std::string name;
     unsigned int reads;
@@ -23,7 +23,8 @@ struct Disk
 
 struct DiskStatisticData : public StatisticData
 {
-    DiskStatisticData(const Disk&);
+    DiskStatisticData(const DiskInfo&);
+    virtual ~DiskStatisticData() {}
     std::string ToString();
 };
 

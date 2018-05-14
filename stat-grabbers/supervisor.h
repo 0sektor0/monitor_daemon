@@ -9,6 +9,7 @@
 #include "printstatsaver.h"
 #include "fstatsaver.h"
 #include "memstatgrabber.h"
+#include "cpustatgrabber.h"
 #include "diskstatgrabber.h"
 
 
@@ -29,7 +30,7 @@ class Supervisor
 {
 public:
     Supervisor();
-    ~Supervisor();
+    virtual ~Supervisor();
     void Stop();
     void Start();
     void GrabStatistic();

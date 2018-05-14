@@ -2,6 +2,7 @@
 #define PRINTSTATSAVER_H
 
 #include "statsaver.h"
+#include "algorithm"
 #include <iostream>
 
 
@@ -9,9 +10,8 @@ class PrintStatSaver : public StatSaver
 {
 public:
     PrintStatSaver() {}
-    ~PrintStatSaver() {}
+    virtual ~PrintStatSaver() {}
     void Save(const vector<StatisticData*>&);
-
 };
 
 #endif // PRINTSTATSAVER_H

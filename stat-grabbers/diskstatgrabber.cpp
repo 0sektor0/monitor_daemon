@@ -1,10 +1,11 @@
 #include "diskstatgrabber.h"
 
 
-DiskStatGrabber::DiskStatGrabber() : FStatGrabber()
+DiskStatGrabber::DiskStatGrabber(bool is_single) : FStatGrabber()
 {
     stat_files.push_back(std::ifstream(diskinfo));
 
+    disk_name_pattern = is_single ? "sd[a-z]$|hd[a-z]$" : "sd[a-z]\\d*$|hd[a-z]\\d*$";
     if(stat_files[0].is_open())
         for(;;)
         {
@@ -13,8 +14,9 @@ DiskStatGrabber::DiskStatGrabber() : FStatGrabber()
 
             if(st != "")
             {
-                Disk d(st);
-                disks[d.name] = d;
+                DiskInfo disk(st);
+                if(std::regex_match(disk.name, std::regex(disk_name_pattern)))
+                    disks[disk.name] = disk;
             }
             else
             {
@@ -39,13 +41,16 @@ void DiskStatGrabber::Grab()
 
             if(st != "")
             {
-                Disk disk(st);
+                DiskInfo disk(st);
 
-                if(!disks.count(disk.name))
+                if(std::regex_match(disk.name, std::regex(disk_name_pattern)))
+                {
+                    if(!disks.count(disk.name))
+                        disks[disk.name] = disk;
+
+                    stat_data.push_back(new DiskStatisticData(disk - disks[disk.name]));
                     disks[disk.name] = disk;
-
-                stat_data.push_back(new DiskStatisticData(disk - disks[disk.name]));
-                disks[disk.name] = disk;
+                }
             }
             else
                 break;

@@ -22,13 +22,16 @@ void FStatSaver::Save(const vector<StatisticData*>& st)
 {
     if (st.size())
     {
-        std::string fn = dir+StringUtilities::ToString(st[0]->date)+".slg";
+        vector<StatisticData*> data = vector<StatisticData*>(st);
+        sort(data.begin(), data.end());
+
+        std::string fn = dir+StringUtilities::ToString(data[0]->date)+extension;
         ofstream stfile(fn);
 
         if (stfile.is_open())
         {
-          for(int i = 0; i < st.size(); i++)
-            stfile << st[i]->ToString() << endl;
+          for(int i = 0; i < data.size(); i++)
+            stfile << data[i]->ToString() << endl;
           stfile.close();
         }
         else

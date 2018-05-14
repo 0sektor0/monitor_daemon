@@ -15,8 +15,10 @@ struct StatisticData
     map<std::string, std::string> data;
 
     StatisticData(map<std::string, std::string>& new_data);
-    virtual std::string ToString() = 0;
     StatisticData();
+    virtual ~StatisticData() {}
+    virtual std::string ToString() = 0;
+    bool operator<(const StatisticData&);
 };
 
 #endif // STATISTICDATA_H

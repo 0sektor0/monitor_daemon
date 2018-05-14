@@ -3,19 +3,22 @@
 
 #include "fstatgrabber.h"
 #include "diskstatisticdata.h"
+#include <regex>
 
 
 class DiskStatGrabber : public FStatGrabber
 {
 public:
-    DiskStatGrabber();
+    DiskStatGrabber(bool);
+    virtual ~DiskStatGrabber() {}
     void Grab();
 
 
 private:
 
     const std::string diskinfo = "/proc/diskstats";
-    map<string, Disk> disks;
+    map<string, DiskInfo> disks;
+    std::string disk_name_pattern;
 };
 
 #endif // DISKSTATGRABBER_H

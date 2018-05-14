@@ -4,7 +4,7 @@
 
 MemStatisticData::MemStatisticData(map<std::string, std::string>& new_data) : StatisticData(new_data)
 {
-    name="meminfo";
+    name="memory_statistic";
 }
 
 

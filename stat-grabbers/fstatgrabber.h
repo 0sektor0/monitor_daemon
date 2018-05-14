@@ -9,7 +9,7 @@ class FStatGrabber : public StatGrabber
 {
 public:
     FStatGrabber();
-    ~FStatGrabber();
+    virtual ~FStatGrabber();
 
 
 protected:
