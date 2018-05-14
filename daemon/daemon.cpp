@@ -6,12 +6,17 @@
 #include <sys/stat.h>
 #include <syslog.h>
 #include <fstream>
+#include <iostream>
+#include "supervisor.h"
+
+using namespace std;
 
 #define PID_FILE_PATH "/var/run/monitor_daemon/monitor_daemon.pid"
+#define STATISTIC_DIRECTORY "/var/log/monitor_daemon"
+
 
 void SetPidFile( char const *fileName ) {
   FILE* f;
-
   std::ofstream pidFile( fileName, std::ios_base::out | std::ios_base::trunc );
 
   if( !pidFile.is_open() ) {
@@ -86,15 +91,62 @@ static void daemonize() {
   signal( SIGTERM, signal_handler );
 }
 
+void start_stat_gathering()
+{
+    Supervisor sv;
+    GrabbersContainer* grubc = new GrabbersContainer();
 
-int main() {
-  daemonize();
-  syslog( LOG_NOTICE, "Monitor-daemon started." );
+    grubc->name = "md";
+    grubc->period = 3000;
+    grubc->grabbers.push_back(new MemStatGrabber());
+    grubc->grabbers.push_back(new DiskStatGrabber(true));
+    grubc->grabbers.push_back(new CpuStatGrabber(true));
+    sv.AddContainer(grubc);
 
-  while( true ) {
-    // launch statGrabber
-    sleep( 5 );
-  }
+    //sv.AddSaver(new PrintStatSaver());
+    sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY));
+    sv.SetPeriod(3000);
 
-  finish();
+    sv.Start();
+    for(;;)
+        sv.GrabStatistic();
+
+    sv.Stop();
 }
+
+
+int main()
+{
+    daemonize();
+    syslog( LOG_NOTICE, "Monitor-daemon started." );
+
+    //запуск сбора статистики
+    start_stat_gathering();
+
+    finish();
+}
+
+/*int main()
+{
+    openlog( "monitor-daemon", LOG_NDELAY | LOG_PID, LOG_USER );
+
+    Supervisor sv;
+    GrabbersContainer* grubc = new GrabbersContainer();
+
+    grubc->name = "md";
+    grubc->period = 3000;
+    grubc->grabbers.push_back(new MemStatGrabber());
+    grubc->grabbers.push_back(new DiskStatGrabber(true));
+    grubc->grabbers.push_back(new CpuStatGrabber(true));
+    sv.AddContainer(grubc);
+
+    sv.AddSaver(new PrintStatSaver());
+    sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY));
+    sv.SetPeriod(3000);
+
+    sv.Start();
+    for(;;)
+        sv.GrabStatistic();
+
+    sv.Stop();
+}*/

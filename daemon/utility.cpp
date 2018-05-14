@@ -67,6 +67,7 @@ void show_data( std::string type = "all" ) {
   }
 }
 
+/*
 int main(int argc, char const *argv[]) {
   switch( argc ) {
     case 1: {
@@ -111,3 +112,4 @@ int main(int argc, char const *argv[]) {
     }
   }
 }
+*/
