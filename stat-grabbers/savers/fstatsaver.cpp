@@ -2,7 +2,7 @@
 
 
 
-FStatSaver::FStatSaver(const std::string& dir)
+FStatSaver::FStatSaver(const std::string& dir, const int& max_writes)
 {
     if (!CheckIsDirectory(dir))
     {
@@ -16,6 +16,8 @@ FStatSaver::FStatSaver(const std::string& dir)
     else
         this->dir = dir;
 
+    CreateLogFile();
+    SetMaxWrites(max_writes);
 }
 
 
@@ -23,20 +25,23 @@ void FStatSaver::Save(const vector<StatisticData*>& st)
 {
     if (st.size())
     {
+        if(writes >= max_writes)
+            CreateLogFile();
+
         vector<StatisticData*> data = vector<StatisticData*>(st);
         sort(data.begin(), data.end());
 
-        std::string fn = dir+StringUtilities::ToString(data[0]->date)+extension;
-        ofstream stfile(fn);
-
-        if (stfile.is_open())
+        ofstream fout(log_file, ios_base::app);
+        if (fout.is_open())
         {
           for(int i = 0; i < data.size(); i++)
-            stfile << data[i]->ToString() << endl;
-          stfile.close();
+            fout << data[i]->ToString() << endl;
+          fout.close();
         }
         else
             syslog (LOG_ERR, "FStatSaver Unable to open file.");
+
+        writes++;
     }
 }
 
@@ -55,4 +60,19 @@ bool FStatSaver::CheckIsDirectory(const std::string& path)
     }
 
     return false;
+}
+
+
+void FStatSaver::CreateLogFile()
+{
+    time_t date;
+    time(&date);
+    log_file = dir + StringUtilities::ToString(date) + extension;
+    writes = 0;
+}
+
+
+void FStatSaver::SetMaxWrites(const int& max_writes)
+{
+    this->max_writes = max_writes > 0 ? max_writes : DEF_MAX_WRITES;
 }

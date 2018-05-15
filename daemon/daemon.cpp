@@ -11,7 +11,7 @@
 
 using namespace std;
 
-#define PID_FILE_PATH "/var/run/monitor_daemon/monitor_daemon.pid"
+#define PID_FILE_PATH "/var/run/monitor_daemon.pid"
 #define STATISTIC_DIRECTORY "/var/log/monitor_daemon"
 
 
@@ -103,8 +103,7 @@ void start_stat_gathering()
     grubc->grabbers.push_back(new CpuStatGrabber(true));
     sv.AddContainer(grubc);
 
-    //sv.AddSaver(new PrintStatSaver());
-    sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY));
+    sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY, 0));
     sv.SetPeriod(3000);
 
     sv.Start();
@@ -141,11 +140,11 @@ int main()
     sv.AddContainer(grubc);
 
     sv.AddSaver(new PrintStatSaver());
-    sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY));
+    sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY, 5));
     sv.SetPeriod(3000);
 
     sv.Start();
-    for(;;)
+    for(int i = 0; i < 10; i++)
         sv.GrabStatistic();
 
     sv.Stop();
