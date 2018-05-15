@@ -1,5 +1,6 @@
 #ifndef CPUSTATGRABBER_H
 #define CPUSTATGRABBER_H
+#define CPU_FILE "/proc/stat"
 
 #include <map>
 #include "fstatgrabber.h"
@@ -15,7 +16,7 @@ public:
 
 
 private:
-    const std::string cpuinfo = "/proc/stat";
+    const std::string cpuinfo = CPU_FILE;
     std::map<string, CpuInfo> cpus;
     std::string cpu_name_pattern;
     int cpu_count;

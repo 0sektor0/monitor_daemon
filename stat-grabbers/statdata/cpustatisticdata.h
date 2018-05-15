@@ -1,5 +1,6 @@
 #ifndef CPUSTATISTICDATA_H
 #define CPUSTATISTICDATA_H
+#define DEFAULT_CPU_NAME "cpu"
 
 #include <regex>
 #include "statisticdata.h"
@@ -10,7 +11,7 @@ using namespace StringUtilities;
 
 struct CpuInfo
 {
-    CpuInfo() {}
+    CpuInfo();
     CpuInfo(const std::string&, const std::string&);
     static bool IsCpuFormat(const std::string&, const std::string&);
     static bool IsCpuFormat(const vector<std::string>&, const std::string&);

@@ -93,20 +93,19 @@ static void daemonize() {
 
 void start_stat_gathering()
 {
-    Supervisor sv;
+    Supervisor sv(3000);
     GrabbersContainer* grubc = new GrabbersContainer();
 
+    grubc->SetSleepTime(3000);
     grubc->name = "md";
-    grubc->period = 3000;
     grubc->grabbers.push_back(new MemStatGrabber());
     grubc->grabbers.push_back(new DiskStatGrabber(true));
     grubc->grabbers.push_back(new CpuStatGrabber(true));
     sv.AddContainer(grubc);
 
     sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY, 0));
-    sv.SetPeriod(3000);
-
     sv.Start();
+
     for(;;)
         sv.GrabStatistic();
 
@@ -129,11 +128,10 @@ int main()
 {
     openlog( "monitor-daemon", LOG_NDELAY | LOG_PID, LOG_USER );
 
-    Supervisor sv;
+    Supervisor sv(3000);
     GrabbersContainer* grubc = new GrabbersContainer();
 
     grubc->name = "md";
-    grubc->period = 3000;
     grubc->grabbers.push_back(new MemStatGrabber());
     grubc->grabbers.push_back(new DiskStatGrabber(true));
     grubc->grabbers.push_back(new CpuStatGrabber(true));
@@ -141,10 +139,9 @@ int main()
 
     sv.AddSaver(new PrintStatSaver());
     sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY, 5));
-    sv.SetPeriod(3000);
 
     sv.Start();
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < 2; i++)
         sv.GrabStatistic();
 
     sv.Stop();

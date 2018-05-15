@@ -1,9 +1,12 @@
 #ifndef SUPERVISOR_H
 #define SUPERVISOR_H
+#define DEFAULT_CONTAINER_SLEEP 3000
+#define DEFAULT_SUPERVISOR_SLEEP 3000
 
 #include <mutex>
 #include <thread>
 #include <chrono>
+#include <memory>
 #include "statsaver.h"
 #include "statgrabber.h"
 #include "printstatsaver.h"
@@ -13,54 +16,48 @@
 #include "diskstatgrabber.h"
 
 
-
 struct GrabbersContainer
 {
     vector<StatGrabber*> grabbers;
-    unsigned int period;
+    unsigned int sleep_time;
     std::string name;
     std::mutex mx;
     bool running;
 
-    GrabbersContainer() : running(true), period(1000) {}
+    GrabbersContainer();
+    void SetSleepTime(const unsigned int&);
 };
 
 
 class Supervisor
 {
 public:
-    Supervisor();
-    virtual ~Supervisor();
     void Stop();
     void Start();
+    virtual ~Supervisor() {}
+    Supervisor(const unsigned int&);
+    Supervisor() : Supervisor(DEFAULT_SUPERVISOR_SLEEP) {}
     void GrabStatistic();
     void AddSaver(StatSaver*);
-    void SetPeriod(const int&);
     void AddContainer(GrabbersContainer*);
     void EnableAllContainers();
     void DisableAllContainers();
+    void SetSleepTime(const unsigned int&);
     void EnableContainer(const std::string&);
     void DisableContainer(const std::string&);
 
 
 private:
-    vector<GrabbersContainer*> enabled_containers;
-    vector<GrabbersContainer*> disabled_containers;
-    vector<StatisticData*> gathered_statistic;
-    vector<StatSaver*> savers;
-    unsigned int period;
+    vector<shared_ptr<GrabbersContainer>> enabled_containers;
+    vector<shared_ptr<GrabbersContainer>> disabled_containers;
+    vector<shared_ptr<StatisticData>> gathered_statistic;
+    vector<shared_ptr<StatSaver>> savers;
+    unsigned int sleep_time;
 
-    void MoveContainer(const std::string&, vector<GrabbersContainer*>&, vector<GrabbersContainer*>&);
-    void MoveAllContainers(vector<GrabbersContainer*>&, vector<GrabbersContainer*>&);
-    void RunContainer(GrabbersContainer*);
+    void MoveContainer(const std::string&, vector<shared_ptr<GrabbersContainer>>&, vector<shared_ptr<GrabbersContainer>>&);
+    void MoveAllContainers(vector<shared_ptr<GrabbersContainer>>&, vector<shared_ptr<GrabbersContainer>>&);
+    void RunContainer(shared_ptr<GrabbersContainer>);
     void Save();
-
-    template<class T>
-    void DeleteVectorsElements(vector<T*>& v)
-    {
-        for(int i = 0; i < v.size(); i++)
-            delete v[i];
-    }
 };
 
 #endif // SUPERVISOR_H

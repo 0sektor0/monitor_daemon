@@ -1,5 +1,6 @@
 #ifndef DISKSTATGRABBER_H
 #define DISKSTATGRABBER_H
+#define DISK_FILE "/proc/diskstats"
 
 #include "fstatgrabber.h"
 #include "diskstatisticdata.h"
@@ -16,7 +17,7 @@ public:
 
 private:
 
-    const std::string diskinfo = "/proc/diskstats";
+    const std::string diskinfo = DISK_FILE;
     map<string, DiskInfo> disks;
     std::string disk_name_pattern;
 };

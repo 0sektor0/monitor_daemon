@@ -4,6 +4,7 @@
 #include <map>
 #include <time.h>
 #include <sstream>
+#include <syslog.h>
 
 using namespace std;
 

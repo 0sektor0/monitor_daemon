@@ -27,26 +27,31 @@ std::string DiskStatisticData::ToString()
 DiskInfo::DiskInfo(const std::string& str)
 {
     vector<std::string> dinf= StringUtilities::Split(str, ' ');
-    const int name_ind = 2;
-    const int read_ind = 3;
-    const int write_ind = 7;
-    const int iotime_ind = 13;
 
-    if(dinf.size() == 14)
+    //индексы значений определены в соответсвие с общей структурой файла дисков
+    if(dinf.size() == INFO_COUNT)
     {
-        name = dinf[name_ind];
-        reads = StringUtilities::Stoui(dinf[read_ind]);
-        writes = StringUtilities::Stoui(dinf[write_ind]);
-        iotime = StringUtilities::Stoui(dinf[iotime_ind]);
+        name = dinf[NAME_INDEX];
+        reads = StringUtilities::Stoui(dinf[READS_INDEX]);
+        writes = StringUtilities::Stoui(dinf[WRITES_INDEX]);
+        iotime = StringUtilities::Stoui(dinf[IOTIME_INDEX]);
     }
     else
-        throw "wrong disk string format";
+    {
+        std::string message = "Wrong disk string format: " + str;
+        syslog(LOG_ERR, "Wrong disk string format");
+        throw std::runtime_error(message);
+        //exit(1);
+    }
 }
 
 
 DiskInfo::DiskInfo()
 {
-
+    name = DEFAULT_DISK_NAME;
+    reads = 0;
+    writes = 0;
+    iotime = 0;
 }
 
 

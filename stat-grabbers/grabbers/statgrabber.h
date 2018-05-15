@@ -2,7 +2,9 @@
 #define STATGRABBER_H
 
 #include "statisticdata.h"
+#include <syslog.h>
 #include <vector>
+#include <memory>
 
 using namespace std;
 
@@ -15,11 +17,11 @@ public:
     bool IsEmpty();
     int GetStatisticNum();
     virtual void Grab() = 0;
-    vector<StatisticData*> GetStatistic();
+    vector<shared_ptr<StatisticData>> MoveStatistic();
 
 
 protected:
-    vector<StatisticData*> stat_data;
+    vector<shared_ptr<StatisticData>> stat_data;
 };
 
 #endif // STATGRABBER_H

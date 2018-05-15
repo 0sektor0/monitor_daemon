@@ -23,7 +23,7 @@ void MemStatGrabber::Grab()
                             {"SwapTotal", GetStat("SwapTotal", f)},
                             {"SwapFree", GetStat("SwapFree", f)},};
 
-    stat_data.push_back(new MemStatisticData(stat));
+    stat_data.push_back(shared_ptr<MemStatisticData>(new MemStatisticData(stat)));
 }
 
 

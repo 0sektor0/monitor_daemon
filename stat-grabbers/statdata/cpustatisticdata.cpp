@@ -46,7 +46,12 @@ CpuInfo::CpuInfo(const std::string& str, const std::string& pattern)
 {
     vector<std::string> vals = StringUtilities::Split(str, ' ');
     if(!CpuInfo::IsCpuFormat(vals, pattern))
-        throw "wrong cpu string format";
+    {
+        std::string message = "Wrong cpu string format: " + str;
+        syslog(LOG_ERR, message.c_str());
+        throw std::runtime_error(message);
+        //exit(1);
+    }
 
     name = vals[0];
     user = StringUtilities::Stoui(vals[1]);
@@ -86,4 +91,17 @@ CpuInfo CpuInfo::operator -(const CpuInfo& c)
     cu.softirq = this->softirq - c.softirq;
 
     return cu;
+}
+
+
+CpuInfo::CpuInfo()
+{
+    name = DEFAULT_CPU_NAME;
+    user = 0;
+    nice = 0;
+    system = 0;
+    idle = 0;
+    iowait = 0;
+    irq = 0;
+    softirq = 0;
 }

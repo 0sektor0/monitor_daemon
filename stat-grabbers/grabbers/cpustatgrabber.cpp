@@ -26,7 +26,11 @@ CpuStatGrabber::CpuStatGrabber(bool is_single) : FStatGrabber()
         }
     }
     else
-        throw "Cannot open " + cpuinfo;
+    {
+        string message = "CPU statistic grabber constructor cant open " + cpuinfo;
+        syslog(LOG_ERR, message.c_str());
+        exit(1);
+    }
 
     stat_files[0].clear();
     stat_files[0].seekg(0);
@@ -47,12 +51,17 @@ void CpuStatGrabber::Grab()
             if(!cpus.count(cpu.name))
                 cpus[cpu.name] = cpu;
 
-            stat_data.push_back((new CpuStatisticData(cpu - cpus[cpu.name])));
+            stat_data.push_back(shared_ptr<CpuStatisticData>(new CpuStatisticData(cpu - cpus[cpu.name])));
             cpus[cpu.name] = cpu;
         }
     }
     else
-        throw "Cannot open " + cpuinfo;
+    {
+        string message = "CPU statistic grabber cant open " + cpuinfo;
+        syslog(LOG_ERR, message.c_str());
+        throw std::runtime_error(message);
+        //exit(1);
+    }
 
     stat_files[0].clear();
     stat_files[0].seekg(0);

@@ -26,7 +26,11 @@ DiskStatGrabber::DiskStatGrabber(bool is_single) : FStatGrabber()
             }
         }
     else
-        throw "Cannot open disk file";
+    {
+        string message = "DISK statistic grabber constructor cant open " + diskinfo;
+        syslog(LOG_ERR, message.c_str());
+        exit(1);
+    }
 }
 
 
@@ -48,7 +52,7 @@ void DiskStatGrabber::Grab()
                     if(!disks.count(disk.name))
                         disks[disk.name] = disk;
 
-                    stat_data.push_back(new DiskStatisticData(disk - disks[disk.name]));
+                    stat_data.push_back(shared_ptr<DiskStatisticData>(new DiskStatisticData(disk - disks[disk.name])));
                     disks[disk.name] = disk;
                 }
             }
@@ -56,7 +60,12 @@ void DiskStatGrabber::Grab()
                 break;
         }
     else
-        throw "Cannot open disk file";
+    {
+        string message = "DISK statistic grabber cant open " + diskinfo;
+        syslog(LOG_ERR, message.c_str());
+        throw std::runtime_error(message);
+        //exit(1);
+    }
 
     stat_files[0].clear();
     stat_files[0].seekg(0);

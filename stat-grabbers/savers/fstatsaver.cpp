@@ -21,15 +21,15 @@ FStatSaver::FStatSaver(const std::string& dir, const int& max_writes)
 }
 
 
-void FStatSaver::Save(const vector<StatisticData*>& st)
+void FStatSaver::Save(const vector<shared_ptr<StatisticData>>& st)
 {
     if (st.size())
     {
         if(writes >= max_writes)
             CreateLogFile();
 
-        vector<StatisticData*> data = vector<StatisticData*>(st);
-        sort(data.begin(), data.end());
+        vector<shared_ptr<StatisticData>> data = vector<shared_ptr<StatisticData>>(st);
+        stable_sort(data.begin(), data.end());
 
         ofstream fout(log_file, ios_base::app);
         if (fout.is_open())

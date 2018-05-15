@@ -1,18 +1,19 @@
 #include "statgrabber.h"
+#include <memory>
 
 
 StatGrabber::StatGrabber()
 {
-    stat_data = vector<StatisticData*>();
+    stat_data = vector<shared_ptr<StatisticData>>();
 }
 
 
-vector<StatisticData*> StatGrabber::GetStatistic()
+vector<shared_ptr<StatisticData>> StatGrabber::MoveStatistic()
 {
     if (stat_data.empty())
         throw std::runtime_error("stat-grabber is empty");
 
-    vector<StatisticData*> dest;
+    vector<shared_ptr<StatisticData>> dest;
     dest = move(stat_data);
     return dest;
 }
@@ -32,7 +33,4 @@ int StatGrabber::GetStatisticNum()
 
 StatGrabber::~StatGrabber()
 {
-    vector<StatisticData*>::iterator i;
-    for (i = stat_data.begin(); i < stat_data.end(); i++)
-        delete *i;
 }

@@ -2,7 +2,9 @@
 #define STATSAVER_H
 
 #include "statisticdata.h"
+#include <syslog.h>
 #include <vector>
+#include <memory>
 
 using namespace std;
 
@@ -10,7 +12,7 @@ using namespace std;
 class StatSaver
 {
 public:
-    virtual void Save(const vector<StatisticData*>&) = 0;
+    virtual void Save(const vector<shared_ptr<StatisticData>>&) = 0;
     //void
 };
 

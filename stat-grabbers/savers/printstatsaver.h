@@ -11,7 +11,7 @@ class PrintStatSaver : public StatSaver
 public:
     PrintStatSaver() {}
     virtual ~PrintStatSaver() {}
-    void Save(const vector<StatisticData*>&);
+    void Save(const vector<shared_ptr<StatisticData>>&);
 };
 
 #endif // PRINTSTATSAVER_H

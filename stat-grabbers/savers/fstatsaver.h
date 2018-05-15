@@ -5,7 +5,6 @@
 #include <vector>
 #include <fstream>
 #include <time.h>
-#include <syslog.h>
 #include <iostream>
 #include "statsaver.h"
 #include "stringutilities.h"
@@ -23,7 +22,7 @@ class FStatSaver : public StatSaver
 public:
     FStatSaver(const std::string&, const int&);
     virtual ~FStatSaver() {}
-    void Save(const vector<StatisticData*>&);
+    void Save(const vector<shared_ptr<StatisticData>>&);
     void SetMaxWrites(const int&);
 
 private:
@@ -33,7 +32,7 @@ private:
     std::string log_file;
     const std::string extension = ".log";
 
-    std::string CreateFname(const StatisticData*);
+    std::string CreateFname(const shared_ptr<StatisticData>);
     bool CheckIsDirectory(const std::string&);
     void CreateLogFile();
 };
