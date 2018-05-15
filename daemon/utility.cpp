@@ -4,36 +4,73 @@
 #include <vector>
 #include <unistd.h>
 #include <curses.h>
+#include <algorithm>
+#include <time.h>
 
 #define DATA_FILE_PATH "/home/deploy/example.txt"
 
 static void show_usage( std::string name ) {
   std::cout << "Usage: " << name << " [-l | --live] [cpu | memory | sda]\n"
-            << "Options:\n"
-            << "\t-h,--help\tShow this help message\n"
-            << "\t-l,--live\tShow real time statistics\n"
-            << "\tcpu\t\tShow cpu statistics\n"
-            << "\tmemory\t\tShow memory statistics\n"
-            << "\tsda\t\tShow sda statistics"
-            << std::endl;
+  << "Options:\n"
+  << "\t-h,--help\tShow this help message\n"
+  << "\t-l,--live\tShow real time statistics\n"
+  << "\tcpu\t\tShow cpu statistics\n"
+  << "\tmemory\t\tShow memory statistics\n"
+  << "\tsda\t\tShow sda statistics"
+  << std::endl;
 } 
 
-std::vector<std::string> parse_data( std::string type ) {
-  std::vector<std::string> data;
+std::vector<std::string> getStats( std::string type ) {
+  type += "_statistic";
+  // find latest file
+  char const *statFileName = "1526307761.log";
+  std::ifstream statFile( statFileName, std::ios_base::in );
+  if( !statFile.is_open() ) {
+    std::cout << "Can not open statistic file." << std::endl;
+    exit( 1 );
+  } 
 
-  std::ifstream myFile( DATA_FILE_PATH, std::ios_base::in );
-  if( myFile.is_open() ) {
-    std::string line;
-    // parse by type
-    // while( getline ( myFile, line ) ) {
-    //   data.push_back( line );
-    // }
-    myFile.close();
-    return data;
-  } else {
-    exit(1);
+  std::vector<std::string> fileLines;
+  std::string line;
+  while( getline( statFile, line ) ) {
+    fileLines.push_back( line );
   }
+  statFile.close();
+
+  std::vector<std::string>::reverse_iterator statLine = std::find_if( fileLines.rbegin(), fileLines.rend(), [type]( std::string i ) { return i == type; });
+
+  std::vector<std::string> statsVector;
+  statsVector.push_back( *(statLine--) );
+  while( !(*statLine).empty() ) {
+    statsVector.push_back( *(statLine--) );
+  }
+
+  // Время в удобном виде
+  struct tm timeInfo;
+  memset( &timeInfo, 0, sizeof( struct tm ) );
+  strptime( statsVector[1].c_str(), "%s", &timeInfo );
+  statsVector[1] = asctime( &timeInfo );
+  statsVector[1].pop_back();
+  
+  return statsVector;
 }
+
+// std::vector<std::string> parse_data( std::string type ) {
+//   std::vector<std::string> data;
+
+//   std::ifstream myFile( DATA_FILE_PATH, std::ios_base::in );
+//   if( myFile.is_open() ) {
+//     std::string line;
+//     // parse by type
+//     // while( getline ( myFile, line ) ) {
+//     //   data.push_back( line );
+//     // }
+//     myFile.close();
+//     return data;
+//   } else {
+//     exit(1);
+//   }
+// }
 
 void show_live_data( std::string type = "all" ) {
   initscr();
@@ -42,11 +79,28 @@ void show_live_data( std::string type = "all" ) {
   bool ex = false;
   while( !ex ) {
     clear();
-    printw( "Press q to exit.\n" );
+    printw( "PRESS q TO EXIT.\n" );
     std::vector<std::string> data;
-    data = parse_data( type );
-    for( auto line : data ) {
-      printw( "%s\n", line.c_str() );
+    if( strcmp( type.c_str(), "all" ) == 0 ) {
+      data = getStats( "cpu" );
+      for( auto line : data ) {
+        printw( "%s\n", line.c_str() );
+      }
+      printw( "\n" );
+      data = getStats( "memory" );
+      for( auto line : data ) {
+        printw( "%s\n", line.c_str() );
+      }
+      printw( "\n" );
+      data = getStats( "sda" );
+      for( auto line : data ) {
+        printw( "%s\n", line.c_str() );
+      }
+    } else {
+      data = getStats( type );
+      for( auto line : data ) {
+        printw( "%s\n", line.c_str() );
+      }
     }
     refresh();
 
@@ -61,13 +115,30 @@ void show_live_data( std::string type = "all" ) {
 
 void show_data( std::string type = "all" ) {
   std::vector<std::string> data;
-  data = parse_data( type );
-  for( auto line : data ) {
-    std::cout << line << std::endl;
+  if( strcmp( type.c_str(), "all" ) == 0 ) {
+    data = getStats( "cpu" );
+    for( auto line : data ) {
+      std::cout << line << std::endl;
+    }
+    std::cout << '\n';
+    data = getStats( "memory" );
+    for( auto line : data ) {
+      std::cout << line << std::endl;
+    }
+    std::cout << '\n';
+    data = getStats( "sda" );
+    for( auto line : data ) {
+      std::cout << line << std::endl;
+    }
+  } else {
+    data = getStats( type );
+    for( auto line : data ) {
+      std::cout << line << std::endl;
+    }
   }
 }
 
-/*
+
 int main(int argc, char const *argv[]) {
   switch( argc ) {
     case 1: {
@@ -112,4 +183,3 @@ int main(int argc, char const *argv[]) {
     }
   }
 }
-*/

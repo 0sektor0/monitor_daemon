@@ -15,13 +15,12 @@ using namespace std;
 #define STATISTIC_DIRECTORY "/var/log/monitor_daemon"
 
 
-void SetPidFile( char const *fileName ) {
-  FILE* f;
+void set_pid_file( char const *fileName ) {
   std::ofstream pidFile( fileName, std::ios_base::out | std::ios_base::trunc );
 
   if( !pidFile.is_open() ) {
     syslog (LOG_ERR, "Can not create pid file.");
-    exit(1);
+    exit( 1 );
   } else {
     pidFile << getpid() << std::flush;
     pidFile.close();
@@ -75,7 +74,7 @@ static void daemonize() {
   // Открытие логов
   // /var/log/syslog
   openlog( "monitor-daemon", LOG_NDELAY | LOG_PID, LOG_USER );
-  SetPidFile( PID_FILE_PATH );
+  set_pid_file( PID_FILE_PATH );
 
   if( chdir( "/" ) < 0 ) {
     syslog( LOG_ERR, "Could not change working directory to /" );
