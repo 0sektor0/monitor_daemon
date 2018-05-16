@@ -38,6 +38,8 @@ void signal_handler( int sig ) {
   switch( sig ) {
     case SIGTERM:
       finish();
+    case SIGHUP:
+      break;
     default:
       break;
   }
@@ -88,6 +90,7 @@ static void daemonize() {
 
   // Сигналы
   signal( SIGTERM, signal_handler );
+  signal( SIGHUP, signal_handler );
 }
 
 void start_stat_gathering()
