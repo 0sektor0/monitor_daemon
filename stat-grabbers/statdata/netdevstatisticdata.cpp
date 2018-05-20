@@ -4,8 +4,9 @@
 
 NetDevStatisticData::NetDevStatisticData(const NetDevInfo& info)
 {
-    name = info.interface + "_statistic";
+    name = "net_statistic";
 
+    data["interface"] = info.interface;
     data["errs_recived"] = StringUtilities::ToString(info.errs_recived);
     data["bytes_recived"] = StringUtilities::ToString(info.bytes_recived);
     data["packets_recived"] = StringUtilities::ToString(info.packets_recived);
@@ -46,6 +47,8 @@ NetDevInfo::NetDevInfo(const std::string& str)
     if(values.size() == VALUES_SIZE)
     {
         interface = values[INTERFACE_INDEX];
+        interface = interface.substr(0, interface.size()-2);
+
         errs_recived = StringUtilities::Stoui(values[ERRS_RECIVED_INDEX]);
         bytes_recived = StringUtilities::Stoui(values[BYTES_RECIVED_INDEX]);
         packets_recived = StringUtilities::Stoui(values[PACKETS_RECIVED_INDEX]);
