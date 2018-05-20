@@ -125,7 +125,7 @@ void start_stat_gathering()
 }
 
 
-/*int main()
+int main()
 {
     daemonize();
     syslog( LOG_NOTICE, "Monitor-daemon started." );
@@ -134,9 +134,9 @@ void start_stat_gathering()
     start_stat_gathering();
 
     finish();
-}*/
+}
 
-int main()
+/*int main()
 {
     openlog( "monitor-daemon", LOG_NDELAY | LOG_PID, LOG_USER );
 
@@ -162,4 +162,4 @@ int main()
         sv.GrabStatistic();
 
     sv.Stop();
-}
+}*/
