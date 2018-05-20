@@ -10,7 +10,6 @@
 using namespace boost::filesystem;
 
 #define LOG_DIR_PATH "/var/log/monitor_daemon/"
-//#define LOG_DIR_PATH "/Users/andrey/tp-s1-cpp-project/daemon/logs/"
 #define LOG_FILE_EXTENSION ".log"
 
 static void show_usage( std::string name ) {
@@ -20,7 +19,8 @@ static void show_usage( std::string name ) {
   << "\t-l,--live\tShow real time statistics\n"
   << "\tcpu\t\tShow cpu statistics\n"
   << "\tmemory\t\tShow memo`ry statistics\n"
-  << "\tsda\t\tShow sda statistics"
+  << "\tsda\t\tShow sda statistics\n"
+  << "\tnet\t\tShow net statistics"
   << std::endl;
 } 
 
@@ -75,7 +75,7 @@ std::vector<std::string> get_stats( std::string type ) {
   return statsVector;
 }
 
-void show_live_data( std::string type1, std::string type2 = "no" ) {
+void show_live_data( std::string type1, std::string type2 = "no", std::string type3 = "no" ) {
   initscr();
   noecho();
   halfdelay( 10 );
@@ -97,8 +97,7 @@ void show_live_data( std::string type1, std::string type2 = "no" ) {
       for( auto line : data ) {
         printw( "%s\n", line.c_str() );
       }
-    } else if( strcmp( type2.c_str(), "no" ) == 0 ) {
-      data = get_stats( type1 );
+      data = get_stats( "net" );
       for( auto line : data ) {
         printw( "%s\n", line.c_str() );
       }
@@ -107,9 +106,17 @@ void show_live_data( std::string type1, std::string type2 = "no" ) {
       for( auto line : data ) {
         printw( "%s\n", line.c_str() );
       }
-      data = get_stats( type2 );
-      for( auto line : data ) {
-        printw( "%s\n", line.c_str() );
+      if( strcmp( type2.c_str(), "no" ) != 0 ) {
+        data = get_stats( type2 );
+        for( auto line : data ) {
+          printw( "%s\n", line.c_str() );
+        }
+      }
+      if( strcmp( type3.c_str(), "no" ) != 0 ) {
+        data = get_stats( type3 );
+        for( auto line : data ) {
+          printw( "%s\n", line.c_str() );
+        }
       }
     }
     refresh();
@@ -130,13 +137,15 @@ void show_data( std::string type = "all" ) {
     for( auto line : data ) {
       std::cout << line << std::endl;
     }
-    std::cout << '\n';
     data = get_stats( "memory" );
     for( auto line : data ) {
       std::cout << line << std::endl;
     }
-    std::cout << '\n';
     data = get_stats( "sda" );
+    for( auto line : data ) {
+      std::cout << line << std::endl;
+    }
+    data = get_stats( "net" );
     for( auto line : data ) {
       std::cout << line << std::endl;
     }
@@ -160,7 +169,7 @@ int main(int argc, char const *argv[]) {
       if( strcmp( argv[1], "-h" ) == 0 || strcmp( argv[1], "--help") == 0 ) {
         show_usage( argv[0] );
         return 0;
-      } else if( strcmp( argv[1], "cpu" ) == 0 || strcmp( argv[1], "memory") == 0 || strcmp( argv[1], "sda") == 0 ) {
+      } else if( strcmp( argv[1], "cpu" ) == 0 || strcmp( argv[1], "memory") == 0 || strcmp( argv[1], "sda") == 0 || strcmp( argv[1], "net" ) == 0 ) {
         show_data( argv[1] );
         return 0;
       } else if( strcmp( argv[1], "-l" ) == 0 || strcmp( argv[1], "--live") == 0 ) {
@@ -174,7 +183,7 @@ int main(int argc, char const *argv[]) {
 
     case 3: {
       if( strcmp( argv[1], "-l" ) == 0 || strcmp( argv[1], "--live") == 0 ) {
-        if( strcmp( argv[2], "cpu" ) == 0 || strcmp( argv[2], "memory") == 0 || strcmp( argv[2], "sda") == 0 ) {
+        if( strcmp( argv[2], "cpu" ) == 0 || strcmp( argv[2], "memory") == 0 || strcmp( argv[2], "sda") == 0 || strcmp( argv[2], "net" ) == 0) {
           show_live_data( argv[2] );
           return 0;
         } else {
@@ -183,10 +192,12 @@ int main(int argc, char const *argv[]) {
         }
       } else if( (strcmp( argv[1], "cpu" ) == 0 ||
                   strcmp( argv[1], "memory") == 0 ||
-                  strcmp( argv[1], "sda") == 0) &&
+                  strcmp( argv[1], "sda") == 0 ||
+                  strcmp( argv[1], "net") == 0) &&
                  (strcmp( argv[2], "cpu" ) == 0 ||
                   strcmp( argv[2], "memory") == 0 ||
-                  strcmp( argv[2], "sda") == 0)
+                  strcmp( argv[2], "sda") == 0 ||
+                  strcmp( argv[2], "net") == 0)
                 ) {
         show_data( argv[1] );
         show_data( argv[2] );
@@ -201,12 +212,58 @@ int main(int argc, char const *argv[]) {
       if( strcmp( argv[1], "-l" ) == 0 || strcmp( argv[1], "--live") == 0 ) {
         if( (strcmp( argv[2], "cpu" ) == 0 ||
              strcmp( argv[2], "memory") == 0 ||
-             strcmp( argv[2], "sda") == 0) &&
+             strcmp( argv[2], "sda") == 0 ||
+             strcmp( argv[2], "net") == 0) &&
             (strcmp( argv[3], "cpu" ) == 0 ||
              strcmp( argv[3], "memory") == 0 ||
-             strcmp( argv[3], "sda") == 0)
+             strcmp( argv[3], "sda") == 0 ||
+             strcmp( argv[2], "net") == 0)
           ) {
           show_live_data( argv[2], argv[3] );
+          return 0;
+        } else {
+          show_usage( argv[0] );
+          return 1;
+        }
+      } else if( (strcmp( argv[1], "cpu" ) == 0 ||
+                  strcmp( argv[1], "memory") == 0 ||
+                  strcmp( argv[1], "sda") == 0  ||
+                  strcmp( argv[1], "net" ) == 0) &&
+                 (strcmp( argv[2], "cpu" ) == 0 ||
+                  strcmp( argv[2], "memory") == 0 ||
+                  strcmp( argv[2], "sda") == 0 ||
+                  strcmp( argv[2], "net" ) == 0)  &&
+                 (strcmp( argv[3], "cpu" ) == 0 ||
+                  strcmp( argv[3], "memory") == 0 ||
+                  strcmp( argv[3], "sda") == 0 ||
+                  strcmp( argv[3], "net" ) == 0)
+                ) {
+        show_data( argv[1] );
+        show_data( argv[2] );
+        show_data( argv[3] );
+        return 0;
+      } else {
+        show_usage( argv[0] );
+        return 1;
+      }
+    }
+
+    case 5: {
+      if( strcmp( argv[1], "-l" ) == 0 || strcmp( argv[1], "--live") == 0 ) {
+        if( (strcmp( argv[2], "cpu" ) == 0 ||
+             strcmp( argv[2], "memory") == 0 ||
+             strcmp( argv[2], "sda") == 0  ||
+             strcmp( argv[2], "net" ) == 0) &&
+            (strcmp( argv[3], "cpu" ) == 0 ||
+             strcmp( argv[3], "memory") == 0 ||
+             strcmp( argv[3], "sda") == 0 ||
+             strcmp( argv[3], "net" ) == 0)  &&
+            (strcmp( argv[4], "cpu" ) == 0 ||
+             strcmp( argv[4], "memory") == 0 ||
+             strcmp( argv[4], "sda") == 0 ||
+             strcmp( argv[4], "net" ) == 0)
+          ) {
+          show_live_data( argv[2], argv[3], argv[4] );
           return 0;
         } else {
           show_usage( argv[0] );
