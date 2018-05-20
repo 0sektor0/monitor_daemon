@@ -1,0 +1,13 @@
+[Unit]
+Description=Monitor Daemon
+
+[Service]
+Type=forking
+PIDFile=/var/run/monitor_daemon/monitor_daemon.pid
+ExecStart=/home/deploy/daemon
+ExecStop=killall -SIGTERM /home/deploy/daemon
+ExecReload=killall -SIGTERM /home/deploy/daemon && /home/deploy/daemon
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
