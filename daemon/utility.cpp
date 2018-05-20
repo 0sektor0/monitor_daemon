@@ -26,7 +26,7 @@ static void show_usage( std::string name ) {
 std::string newest_log_file() {
   path directory( LOG_DIR_PATH );
   if( !( exists( directory ) && is_directory( directory ) ) ) {
-    std::cout << "Statistic files directory is invalid." << std::endl;
+    std::cerr << "Statistic files directory is invalid." << std::endl;
     exit( 1 );
   }
   long int newest_file_name = 1; 
@@ -44,7 +44,7 @@ std::vector<std::string> get_stats( std::string type ) {
   std::string statFileName = LOG_DIR_PATH + newest_log_file() + LOG_FILE_EXTENSION;
   std::ifstream statFile( statFileName, std::ios_base::in );
   if( !statFile.is_open() ) {
-    std::cout << "Can not open statistic file." << std::endl;
+    std::cerr << "Can not open statistic file." << std::endl;
     exit( 1 );
   } 
 

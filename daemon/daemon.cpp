@@ -14,6 +14,22 @@ using namespace std;
 #define PID_FILE_PATH "/var/run/monitor_daemon.pid"
 #define STATISTIC_DIRECTORY "/var/log/monitor_daemon"
 
+bool is_daemon_running( const char *processName, char const *pidFileName ) {
+  std::ifstream pidFile( pidFileName );
+  if( !pidFile.good() ) {
+    pidFile.close();
+    return false;
+  } else {
+    std::string pid;
+    getline( pidFile, pid );
+    pidFile.close();
+    if( kill( std::stoi(pid), 0) == 0 ) {
+      return true;
+    } else{
+      return false;
+    }
+  }
+}
 
 void set_pid_file( char const *fileName ) {
   std::ofstream pidFile( fileName, std::ios_base::out | std::ios_base::trunc );
@@ -115,8 +131,11 @@ void start_stat_gathering()
 }
 
 
-int main()
-{
+int main( int argc, char const *argv[] ) {
+    if( is_daemon_running( argv[0], PID_FILE_PATH ) ) {
+        std::cerr << "Daemon is already running." << std::endl;
+        exit( 1 );
+    }
     daemonize();
     syslog( LOG_NOTICE, "Monitor-daemon started." );
 
