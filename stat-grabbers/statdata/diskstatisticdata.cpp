@@ -39,7 +39,7 @@ DiskInfo::DiskInfo(const std::string& str)
     else
     {
         std::string message = "Wrong disk string format: " + str;
-        syslog(LOG_ERR, "Wrong disk string format");
+        syslog(LOG_ERR, message.c_str());
         throw std::runtime_error(message);
         //exit(1);
     }
