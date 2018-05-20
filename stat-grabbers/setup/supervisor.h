@@ -14,6 +14,7 @@
 #include "memstatgrabber.h"
 #include "cpustatgrabber.h"
 #include "diskstatgrabber.h"
+#include "netdevgrabbers.h"
 
 
 struct GrabbersContainer

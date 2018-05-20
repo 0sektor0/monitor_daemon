@@ -9,7 +9,8 @@
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;
 
-#define LOG_DIR_PATH "/Users/andrey/tp-s1-cpp-project/daemon/logs/"
+#define LOG_DIR_PATH "/var/log/monitor_daemon/"
+//#define LOG_DIR_PATH "/Users/andrey/tp-s1-cpp-project/daemon/logs/"
 #define LOG_FILE_EXTENSION ".log"
 
 static void show_usage( std::string name ) {
@@ -18,7 +19,7 @@ static void show_usage( std::string name ) {
   << "\t-h,--help\tShow this help message\n"
   << "\t-l,--live\tShow real time statistics\n"
   << "\tcpu\t\tShow cpu statistics\n"
-  << "\tmemory\t\tShow memory statistics\n"
+  << "\tmemory\t\tShow memo`ry statistics\n"
   << "\tsda\t\tShow sda statistics"
   << std::endl;
 } 
