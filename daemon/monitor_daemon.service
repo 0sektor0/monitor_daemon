@@ -1,12 +1,12 @@
 [Unit]
-Description=Monitor Daemon
+Description=MonitorDaemon
 
 [Service]
 Type=forking
-PIDFile=/var/run/monitor_daemon/monitor_daemon.pid
-ExecStart=/home/deploy/daemon
-ExecStop=killall -SIGTERM /home/deploy/daemon
-ExecReload=killall -SIGTERM /home/deploy/daemon && /home/deploy/daemon
+PIDFile=/var/run/monitor_daemon.pid
+ExecStart=/usr/bin/monitor_daemon
+ExecStop=killall -SIGTERM /usr/bin/monitor_daemon
+ExecReload=killall -SIGTERM /usr/bin/monitor_daemon && /usr/bin/monitor_daemon
 Restart=always
 
 [Install]
