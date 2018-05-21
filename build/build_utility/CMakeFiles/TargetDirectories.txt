@@ -1,0 +1,3 @@
+/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_utility/CMakeFiles/rebuild_cache.dir
+/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_utility/CMakeFiles/edit_cache.dir
+/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_utility/CMakeFiles/mdu.dir

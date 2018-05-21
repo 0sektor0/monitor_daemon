@@ -1,0 +1,55 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_d847c/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d847c.dir/build.make CMakeFiles/cmTC_d847c.dir/build
+make[1]: вход в каталог «/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/CMakeFiles/CMakeTmp»
+Building C object CMakeFiles/cmTC_d847c.dir/CheckSymbolExists.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_d847c.dir/CheckSymbolExists.c.o   -c /home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_d847c
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d847c.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_d847c.dir/CheckSymbolExists.c.o  -o cmTC_d847c -rdynamic 
+CMakeFiles/cmTC_d847c.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x1b): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_d847c.dir/build.make:97: ошибка выполнения рецепта для цели «cmTC_d847c»
+make[1]: *** [cmTC_d847c] Ошибка 1
+make[1]: выход из каталога «/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/CMakeFiles/CMakeTmp»
+Makefile:126: ошибка выполнения рецепта для цели «cmTC_d847c/fast»
+make: *** [cmTC_d847c/fast] Ошибка 2
+
+File /home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_41e31/fast"
+/usr/bin/make -f CMakeFiles/cmTC_41e31.dir/build.make CMakeFiles/cmTC_41e31.dir/build
+make[1]: вход в каталог «/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/CMakeFiles/CMakeTmp»
+Building C object CMakeFiles/cmTC_41e31.dir/CheckFunctionExists.c.o
+/usr/bin/cc    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_41e31.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.7/Modules/CheckFunctionExists.c
+Linking C executable cmTC_41e31
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_41e31.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_41e31.dir/CheckFunctionExists.c.o  -o cmTC_41e31 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_41e31.dir/build.make:97: ошибка выполнения рецепта для цели «cmTC_41e31»
+make[1]: *** [cmTC_41e31] Ошибка 1
+make[1]: выход из каталога «/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/CMakeFiles/CMakeTmp»
+Makefile:126: ошибка выполнения рецепта для цели «cmTC_41e31/fast»
+make: *** [cmTC_41e31/fast] Ошибка 2
+
+
