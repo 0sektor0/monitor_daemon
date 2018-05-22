@@ -14,18 +14,20 @@
 #include "memstatgrabber.h"
 #include "cpustatgrabber.h"
 #include "diskstatgrabber.h"
+#include "netdevgrabbers.h"
 
 
 struct GrabbersContainer
 {
-    vector<StatGrabber*> grabbers;
+    vector<shared_ptr<StatGrabber>> grabbers;
     unsigned int sleep_time;
     std::string name;
     std::mutex mx;
     bool running;
 
     GrabbersContainer();
-    void SetSleepTime(const unsigned int&);
+    void SetSleepTime(unsigned int);
+    void AddGrabber(StatGrabber*);
 };
 
 
@@ -35,16 +37,16 @@ public:
     void Stop();
     void Start();
     virtual ~Supervisor() {}
-    Supervisor(const unsigned int&);
+    Supervisor(unsigned int);
     Supervisor() : Supervisor(DEFAULT_SUPERVISOR_SLEEP) {}
     void GrabStatistic();
     void AddSaver(StatSaver*);
     void AddContainer(GrabbersContainer*);
     void EnableAllContainers();
     void DisableAllContainers();
-    void SetSleepTime(const unsigned int&);
-    void EnableContainer(const std::string&);
-    void DisableContainer(const std::string&);
+    void SetSleepTime(unsigned int);
+    void EnableContainer(std::string);
+    void DisableContainer(std::string);
 
 
 private:
@@ -54,7 +56,7 @@ private:
     vector<shared_ptr<StatSaver>> savers;
     unsigned int sleep_time;
 
-    void MoveContainer(const std::string&, vector<shared_ptr<GrabbersContainer>>&, vector<shared_ptr<GrabbersContainer>>&);
+    void MoveContainer(std::string, vector<shared_ptr<GrabbersContainer>>&, vector<shared_ptr<GrabbersContainer>>&);
     void MoveAllContainers(vector<shared_ptr<GrabbersContainer>>&, vector<shared_ptr<GrabbersContainer>>&);
     void RunContainer(shared_ptr<GrabbersContainer>);
     void Save();

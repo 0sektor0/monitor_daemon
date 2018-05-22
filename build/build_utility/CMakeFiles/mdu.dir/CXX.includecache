@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sektor/mydocs/projects/C++/monitor_daemon/daemon/utility.cpp
+iostream
+-
+fstream
+-
+string.h
+-
+vector
+-
+unistd.h
+-
+curses.h
+-
+algorithm
+-
+time.h
+-
+boost/filesystem.hpp
+-
+
