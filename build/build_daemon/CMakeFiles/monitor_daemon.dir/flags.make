@@ -6,5 +6,5 @@ CXX_FLAGS =
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/../../stat-grabbers/grabbers -I/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/../../stat-grabbers/savers -I/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/../../stat-grabbers/setup -I/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/../../stat-grabbers/statdata 
+CXX_INCLUDES = -I/home/sektor/mydocs/projects/C++/tp-s1-cpp-project/build/build_daemon/../../stat-grabbers/grabbers -I/home/sektor/mydocs/projects/C++/tp-s1-cpp-project/build/build_daemon/../../stat-grabbers/savers -I/home/sektor/mydocs/projects/C++/tp-s1-cpp-project/build/build_daemon/../../stat-grabbers/setup -I/home/sektor/mydocs/projects/C++/tp-s1-cpp-project/build/build_daemon/../../stat-grabbers/statdata 
 

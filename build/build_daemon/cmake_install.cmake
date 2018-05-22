@@ -1,4 +1,4 @@
-# Install script for directory: /home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon
+# Install script for directory: /home/sektor/mydocs/projects/C++/tp-s1-cpp-project/build/build_daemon
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/sektor/mydocs/projects/C++/monitor_daemon/build/build_daemon/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/sektor/mydocs/projects/C++/tp-s1-cpp-project/build/build_daemon/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

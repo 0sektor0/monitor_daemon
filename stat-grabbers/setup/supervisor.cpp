@@ -2,7 +2,7 @@
 
 
 
-Supervisor::Supervisor(const unsigned int& sleep_time)
+Supervisor::Supervisor(unsigned int sleep_time)
 {
     SetSleepTime(sleep_time);
 }
@@ -20,7 +20,7 @@ void Supervisor::AddSaver(StatSaver* saver)
 }
 
 
-void Supervisor::SetSleepTime(const unsigned int& sleep_time)
+void Supervisor::SetSleepTime(unsigned int sleep_time)
 {
     this->sleep_time = sleep_time != 0 ? sleep_time : DEFAULT_SUPERVISOR_SLEEP;
 }
@@ -91,7 +91,7 @@ void Supervisor::GrabStatistic()
     std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 
     for(shared_ptr<GrabbersContainer> container : enabled_containers)
-        for(StatGrabber* grabber : container->grabbers)
+        for(shared_ptr<StatGrabber> grabber : container->grabbers)
         {
             container->mx.lock();
             if(!grabber->IsEmpty())
@@ -106,19 +106,19 @@ void Supervisor::GrabStatistic()
 }
 
 
-void Supervisor::DisableContainer(const std::string& name)
+void Supervisor::DisableContainer(std::string name)
 {
     MoveContainer(name, enabled_containers, disabled_containers);
 }
 
 
-void Supervisor::EnableContainer(const std::string& name)
+void Supervisor::EnableContainer(std::string name)
 {
     MoveContainer(name, disabled_containers, enabled_containers);
 }
 
 
-void Supervisor::MoveContainer(const std::string& name, vector<shared_ptr<GrabbersContainer>>& src, vector<shared_ptr<GrabbersContainer>>& dist)
+void Supervisor::MoveContainer(std::string name, vector<shared_ptr<GrabbersContainer>>& src, vector<shared_ptr<GrabbersContainer>>& dist)
 {
     for(int i = 0; i < src.size(); i++)
         if(src[i]->name == name)
@@ -164,7 +164,13 @@ GrabbersContainer::GrabbersContainer()
 }
 
 
-void GrabbersContainer::SetSleepTime(const unsigned int&)
+void GrabbersContainer::SetSleepTime(unsigned int)
 {
     this->sleep_time = sleep_time != 0 ? sleep_time : DEFAULT_SUPERVISOR_SLEEP;
+}
+
+
+void GrabbersContainer::AddGrabber(StatGrabber* grabber)
+{
+    grabbers.push_back(shared_ptr<StatGrabber>(grabber));
 }

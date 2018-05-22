@@ -112,22 +112,22 @@ static void daemonize() {
 void start_stat_gathering()
 {
     //устанавливаем интервал опроса контейнеров в 3 секуны
-    Supervisor sv(3000);
+    Supervisor sv(2000);
     GrabbersContainer* grubc1 = new GrabbersContainer();
     GrabbersContainer* grubc2 = new GrabbersContainer();
 
     //инициализируем контейнер для сбора статистик о памяти, диках и цпу
     grubc1->name = "mdc";
     //устанавливаем интервал опроса этого контейнера в 3 секунды
-    grubc1->SetSleepTime(3000);
-    grubc1->grabbers.push_back(new MemStatGrabber());
-    grubc1->grabbers.push_back(new DiskStatGrabber(true));
-    grubc1->grabbers.push_back(new CpuStatGrabber(true));
+    grubc1->SetSleepTime(2000);
+    grubc1->AddGrabber(new MemStatGrabber());
+    grubc1->AddGrabber(new DiskStatGrabber(true));
+    grubc1->AddGrabber(new CpuStatGrabber(true));
     sv.AddContainer(grubc1);
 
     grubc2->name = "net";
-    grubc1->SetSleepTime(6000);
-    grubc2->grabbers.push_back(new NetDevGrabber(true));
+    grubc1->SetSleepTime(3000);
+    grubc2->AddGrabber(new NetDevGrabber(false));
     sv.AddContainer(grubc2);
 
     //для сохранения статистики назначаем файловый Saver
@@ -157,27 +157,31 @@ int main( int argc, char const *argv[] ) {
 
 /*int main()
 {
-    openlog( "monitor-daemon", LOG_NDELAY | LOG_PID, LOG_USER );
-
-    Supervisor sv(3000);
+    //устанавливаем интервал опроса контейнеров в 3 секуны
+    Supervisor sv(2000);
     GrabbersContainer* grubc1 = new GrabbersContainer();
     GrabbersContainer* grubc2 = new GrabbersContainer();
 
+    //инициализируем контейнер для сбора статистик о памяти, диках и цпу
     grubc1->name = "mdc";
-    grubc1->grabbers.push_back(new MemStatGrabber());
-    grubc1->grabbers.push_back(new DiskStatGrabber(true));
-    grubc1->grabbers.push_back(new CpuStatGrabber(true));
+    //устанавливаем интервал опроса этого контейнера в 3 секунды
+    grubc1->SetSleepTime(2000);
+    grubc1->AddGrabber(new MemStatGrabber());
+    grubc1->AddGrabber(new DiskStatGrabber(true));
+    grubc1->AddGrabber(new CpuStatGrabber(true));
     sv.AddContainer(grubc1);
 
     grubc2->name = "net";
-    grubc2->grabbers.push_back(new NetDevGrabber(true));
+    grubc1->SetSleepTime(3000);
+    grubc2->AddGrabber(new NetDevGrabber(false));
     sv.AddContainer(grubc2);
 
+    //для сохранения статистики назначаем файловый Saver
     sv.AddSaver(new PrintStatSaver());
-    sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY, 5));
-
+    sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY, 0));
     sv.Start();
-    for(int i = 0; i < 2; i++)
+
+    for(;;)
         sv.GrabStatistic();
 
     sv.Stop();
