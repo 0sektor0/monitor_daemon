@@ -157,6 +157,17 @@ void show_data( std::string type = "all" ) {
   }
 }
 
+bool is_valid_param( char const *argv ) {
+  if( strcmp( argv, "cpu" ) == 0 ||
+      strcmp( argv, "memory") == 0 ||
+      strcmp( argv, "sda") == 0 ||
+      strcmp( argv, "net") == 0 ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 int main(int argc, char const *argv[]) {
   switch( argc ) {
@@ -169,7 +180,7 @@ int main(int argc, char const *argv[]) {
       if( strcmp( argv[1], "-h" ) == 0 || strcmp( argv[1], "--help") == 0 ) {
         show_usage( argv[0] );
         return 0;
-      } else if( strcmp( argv[1], "cpu" ) == 0 || strcmp( argv[1], "memory") == 0 || strcmp( argv[1], "sda") == 0 || strcmp( argv[1], "net" ) == 0 ) {
+      } else if( is_valid_param( argv[1] ) ) {
         show_data( argv[1] );
         return 0;
       } else if( strcmp( argv[1], "-l" ) == 0 || strcmp( argv[1], "--live") == 0 ) {
@@ -183,22 +194,14 @@ int main(int argc, char const *argv[]) {
 
     case 3: {
       if( strcmp( argv[1], "-l" ) == 0 || strcmp( argv[1], "--live") == 0 ) {
-        if( strcmp( argv[2], "cpu" ) == 0 || strcmp( argv[2], "memory") == 0 || strcmp( argv[2], "sda") == 0 || strcmp( argv[2], "net" ) == 0) {
+        if( is_valid_param( argv[2] ) ) {
           show_live_data( argv[2] );
           return 0;
         } else {
           show_usage( argv[0] );
           return 1;
         }
-      } else if( (strcmp( argv[1], "cpu" ) == 0 ||
-                  strcmp( argv[1], "memory") == 0 ||
-                  strcmp( argv[1], "sda") == 0 ||
-                  strcmp( argv[1], "net") == 0) &&
-                 (strcmp( argv[2], "cpu" ) == 0 ||
-                  strcmp( argv[2], "memory") == 0 ||
-                  strcmp( argv[2], "sda") == 0 ||
-                  strcmp( argv[2], "net") == 0)
-                ) {
+      } else if( is_valid_param( argv[1] ) && is_valid_param( argv[2] ) ) {
         show_data( argv[1] );
         show_data( argv[2] );
         return 0;
@@ -210,34 +213,14 @@ int main(int argc, char const *argv[]) {
 
     case 4: {
       if( strcmp( argv[1], "-l" ) == 0 || strcmp( argv[1], "--live") == 0 ) {
-        if( (strcmp( argv[2], "cpu" ) == 0 ||
-             strcmp( argv[2], "memory") == 0 ||
-             strcmp( argv[2], "sda") == 0 ||
-             strcmp( argv[2], "net") == 0) &&
-            (strcmp( argv[3], "cpu" ) == 0 ||
-             strcmp( argv[3], "memory") == 0 ||
-             strcmp( argv[3], "sda") == 0 ||
-             strcmp( argv[2], "net") == 0)
-          ) {
+        if( is_valid_param( argv[2] ) && is_valid_param( argv[3] ) ) {
           show_live_data( argv[2], argv[3] );
           return 0;
         } else {
           show_usage( argv[0] );
           return 1;
         }
-      } else if( (strcmp( argv[1], "cpu" ) == 0 ||
-                  strcmp( argv[1], "memory") == 0 ||
-                  strcmp( argv[1], "sda") == 0  ||
-                  strcmp( argv[1], "net" ) == 0) &&
-                 (strcmp( argv[2], "cpu" ) == 0 ||
-                  strcmp( argv[2], "memory") == 0 ||
-                  strcmp( argv[2], "sda") == 0 ||
-                  strcmp( argv[2], "net" ) == 0)  &&
-                 (strcmp( argv[3], "cpu" ) == 0 ||
-                  strcmp( argv[3], "memory") == 0 ||
-                  strcmp( argv[3], "sda") == 0 ||
-                  strcmp( argv[3], "net" ) == 0)
-                ) {
+      } else if( is_valid_param( argv[1] ) && is_valid_param( argv[2] )  && is_valid_param( argv[3] ) ) {
         show_data( argv[1] );
         show_data( argv[2] );
         show_data( argv[3] );
@@ -250,19 +233,7 @@ int main(int argc, char const *argv[]) {
 
     case 5: {
       if( strcmp( argv[1], "-l" ) == 0 || strcmp( argv[1], "--live") == 0 ) {
-        if( (strcmp( argv[2], "cpu" ) == 0 ||
-             strcmp( argv[2], "memory") == 0 ||
-             strcmp( argv[2], "sda") == 0  ||
-             strcmp( argv[2], "net" ) == 0) &&
-            (strcmp( argv[3], "cpu" ) == 0 ||
-             strcmp( argv[3], "memory") == 0 ||
-             strcmp( argv[3], "sda") == 0 ||
-             strcmp( argv[3], "net" ) == 0)  &&
-            (strcmp( argv[4], "cpu" ) == 0 ||
-             strcmp( argv[4], "memory") == 0 ||
-             strcmp( argv[4], "sda") == 0 ||
-             strcmp( argv[4], "net" ) == 0)
-          ) {
+        if( is_valid_param( argv[2] ) && is_valid_param( argv[3] )  && is_valid_param( argv[4] ) ) {
           show_live_data( argv[2], argv[3], argv[4] );
           return 0;
         } else {
