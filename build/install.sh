@@ -1,5 +1,6 @@
 # !bin/bash
 cd build_daemon  			 		
+cmake .
 make  			 		 	
 cd -					 	
 cp build_daemon/monitor_daemon /usr/bin/ 
@@ -11,6 +12,7 @@ systemctl start monitor_daemon
 
 
 cd build_utility 
+cmake .
 make 
 cd - 
 cp build_utility/mdu /usr/bin 
