@@ -36,7 +36,7 @@ class Supervisor
 public:
     void Stop();
     void Start();
-    virtual ~Supervisor() {}
+    virtual ~Supervisor();
     Supervisor(unsigned int);
     Supervisor() : Supervisor(DEFAULT_SUPERVISOR_SLEEP) {}
     void GrabStatistic();

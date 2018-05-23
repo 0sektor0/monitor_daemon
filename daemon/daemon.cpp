@@ -7,12 +7,17 @@
 #include <syslog.h>
 #include <fstream>
 #include <iostream>
+#include <libconfig.h++>
 #include "supervisor.h"
 
 using namespace std;
+using namespace libconfig;
 
 #define PID_FILE_PATH "/var/run/monitor_daemon.pid"
 #define STATISTIC_DIRECTORY "/var/log/monitor_daemon"
+#define CONFIG_FILE_PATH "/etc/monitor_daemon.cfg"
+
+
 
 bool is_daemon_running( const char *processName, char const *pidFileName ) {
   std::ifstream pidFile( pidFileName );
@@ -31,6 +36,7 @@ bool is_daemon_running( const char *processName, char const *pidFileName ) {
   }
 }
 
+
 void set_pid_file( char const *fileName ) {
   std::ofstream pidFile( fileName, std::ios_base::out | std::ios_base::trunc );
 
@@ -43,12 +49,14 @@ void set_pid_file( char const *fileName ) {
   }
 }
 
+
 void finish() {
   syslog( LOG_NOTICE, "Monitor-daemon terminated." );
   closelog();
   unlink( PID_FILE_PATH );
   exit( EXIT_SUCCESS );
 }
+
 
 void signal_handler( int sig ) {
   switch( sig ) {
@@ -60,6 +68,7 @@ void signal_handler( int sig ) {
       break;
   }
 }
+
 
 static void daemonize() {
   pid_t pid;
@@ -109,29 +118,73 @@ static void daemonize() {
   signal( SIGHUP, signal_handler );
 }
 
-void start_stat_gathering()
+
+Supervisor Configure()
 {
+    //дефолтные значения
+    int sv_sleep_time = 3000;
+    int mdc_sleep_time = 3000;
+    int net_sleep_time = 3000;
+    bool disk_single = true;
+    bool cpu_single = true;
+    bool net_all = true;
+
+    //считываем конфиги
+    Config conf;
+    try { conf.readFile(CONFIG_FILE_PATH); }
+    catch(...)
+    {
+        std::string message = "Cant find config file: " + std::string(CONFIG_FILE_PATH);
+        syslog( LOG_ALERT, message.c_str());
+    }
+
+    try { sv_sleep_time = conf.lookup("supervisor.sv_sleep_time"); }
+    catch(...) { syslog( LOG_ALERT, "unnable to read sv_sleep_time from configs"); }
+
+    try { mdc_sleep_time = conf.lookup("supervisor.mdc_sleep_time"); }
+    catch(...) { syslog( LOG_ALERT, "unnable to read mdc_sleep_time from configs"); }
+
+    try { net_sleep_time = conf.lookup("supervisor.net_sleep_time"); }
+    catch(...) { syslog( LOG_ALERT, "unnable to read net_sleep_time from configs"); }
+
+    try { disk_single = conf.lookup("supervisor.disk_single"); }
+    catch(...) { syslog( LOG_ALERT, "unnable to read disk_single from configs"); }
+
+    try { cpu_single = conf.lookup("supervisor.cpu_single"); }
+    catch(...) { syslog( LOG_ALERT, "unnable to read cpu_single from configs"); }
+
+    try { net_all = conf.lookup("supervisor.net_all"); }
+    catch(...) { syslog( LOG_ALERT, "unnable to read net_all from configs"); }
+
     //устанавливаем интервал опроса контейнеров в 3 секуны
-    Supervisor sv(2000);
+    Supervisor sv(sv_sleep_time);
     GrabbersContainer* grubc1 = new GrabbersContainer();
     GrabbersContainer* grubc2 = new GrabbersContainer();
 
     //инициализируем контейнер для сбора статистик о памяти, диках и цпу
     grubc1->name = "mdc";
     //устанавливаем интервал опроса этого контейнера в 3 секунды
-    grubc1->SetSleepTime(2000);
+    grubc1->SetSleepTime(mdc_sleep_time);
     grubc1->AddGrabber(new MemStatGrabber());
-    grubc1->AddGrabber(new DiskStatGrabber(true));
-    grubc1->AddGrabber(new CpuStatGrabber(true));
+    grubc1->AddGrabber(new DiskStatGrabber(disk_single));
+    grubc1->AddGrabber(new CpuStatGrabber(cpu_single));
     sv.AddContainer(grubc1);
 
     grubc2->name = "net";
-    grubc1->SetSleepTime(3000);
-    grubc2->AddGrabber(new NetDevGrabber(false));
+    grubc1->SetSleepTime(net_sleep_time);
+    grubc2->AddGrabber(new NetDevGrabber(net_all));
     sv.AddContainer(grubc2);
 
     //для сохранения статистики назначаем файловый Saver
     sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY, 0));
+    return sv;
+}
+
+
+void start_stat_gathering()
+{
+    //устанавливаем интервал опроса контейнеров в 3 секуны
+    Supervisor sv = Configure();
     sv.Start();
 
     for(;;)
@@ -155,33 +208,14 @@ int main( int argc, char const *argv[] ) {
     finish();
 }
 
+
 /*int main()
 {
-    //устанавливаем интервал опроса контейнеров в 3 секуны
-    Supervisor sv(2000);
-    GrabbersContainer* grubc1 = new GrabbersContainer();
-    GrabbersContainer* grubc2 = new GrabbersContainer();
+    Supervisor sv = Configure();
+    sv.AddSaver((new PrintStatSaver()));
 
-    //инициализируем контейнер для сбора статистик о памяти, диках и цпу
-    grubc1->name = "mdc";
-    //устанавливаем интервал опроса этого контейнера в 3 секунды
-    grubc1->SetSleepTime(2000);
-    grubc1->AddGrabber(new MemStatGrabber());
-    grubc1->AddGrabber(new DiskStatGrabber(true));
-    grubc1->AddGrabber(new CpuStatGrabber(true));
-    sv.AddContainer(grubc1);
-
-    grubc2->name = "net";
-    grubc1->SetSleepTime(3000);
-    grubc2->AddGrabber(new NetDevGrabber(false));
-    sv.AddContainer(grubc2);
-
-    //для сохранения статистики назначаем файловый Saver
-    sv.AddSaver(new PrintStatSaver());
-    sv.AddSaver(new FStatSaver(STATISTIC_DIRECTORY, 0));
     sv.Start();
-
-    for(;;)
+    for(int i = 0; i < 2; i++)
         sv.GrabStatistic();
 
     sv.Stop();

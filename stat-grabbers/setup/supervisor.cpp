@@ -156,6 +156,12 @@ void Supervisor::MoveAllContainers(vector<shared_ptr<GrabbersContainer>>& src, v
 }
 
 
+Supervisor::~Supervisor()
+{
+    DisableAllContainers();
+}
+
+
 
 GrabbersContainer::GrabbersContainer()
 {

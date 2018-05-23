@@ -1,3 +1,0 @@
-/home/sektor/mydocs/projects/C++/tp-s1-cpp-project/build/build_daemon/CMakeFiles/rebuild_cache.dir
-/home/sektor/mydocs/projects/C++/tp-s1-cpp-project/build/build_daemon/CMakeFiles/edit_cache.dir
-/home/sektor/mydocs/projects/C++/tp-s1-cpp-project/build/build_daemon/CMakeFiles/monitor_daemon.dir

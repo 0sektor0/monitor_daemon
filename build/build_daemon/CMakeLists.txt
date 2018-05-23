@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x -pthread -lboost_system -lboost_filesystem -lncurses")
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x -pthread -lboost_system -lboost_filesystem -lncurses -lconfig++")
 set(CMAKE_BUILD_TYPE Release)
 
 project(monitor_daemon)
