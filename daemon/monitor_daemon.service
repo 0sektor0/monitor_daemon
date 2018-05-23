@@ -1,0 +1,13 @@
+[Unit]
+Description=MonitorDaemon
+
+[Service]
+Type=forking
+PIDFile=/var/run/monitor_daemon.pid
+ExecStart=/usr/bin/monitor_daemon
+ExecStop=killall -SIGTERM /usr/bin/monitor_daemon
+ExecReload=killall -SIGTERM /usr/bin/monitor_daemon && /usr/bin/monitor_daemon
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
